@@ -145,11 +145,6 @@
                 <db.username>lJjHmgPUb6xnpfVgV5PUNQ==</db.username>
                 <db.password>ZHpxVPYV03ZQEYudKMr1aw==</db.password>
 
-<!--                <db.url>jdbc:mariadb://localhost:3306/camtorage</db.url>-->
-<!--                <db.username>tester</db.username>-->
-<!--                <db.password>1234</db.password>-->
-
-
                 <!--                <logback.level>INFO</logback.level>-->
                 <!--                <logback.dir>D://logs/spring-boot/${project.name}</logback.dir>-->
 
@@ -164,12 +159,6 @@
                 </db.url>
                 <db.username>6EaOvme3PHfEM5HzNQ24Eg==</db.username>
                 <db.password>yhdBDd7V5fA1W3McCucGXoWBQjO8EqN3</db.password>
-<!--                <db.url>-->
-<!--                    jdbc:mariadb://studycafe-database-1.c2rdlwzsqvnq.ap-northeast-2.rds.amazonaws.com:3306/camtorage-->
-<!--                </db.url>-->
-<!--                <db.username>admin</db.username>-->
-<!--                <db.password>029775293</db.password>-->
-
                 <!--                <logback.level>INFO</logback.level>-->
                 <!--                <logback.dir>D://logs/spring-boot/${project.name}</logback.dir>-->
 

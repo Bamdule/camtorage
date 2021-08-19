@@ -1,13 +1,11 @@
 package com.camtorage.common.util;
 
-import com.camtorage.property.AwsS3Property;
 import com.camtorage.property.ServerProperty;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 import java.time.LocalDate;
 
 /**
