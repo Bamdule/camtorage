@@ -7,9 +7,9 @@ import java.util.List;
 
 public interface S3Service {
 
-    public S3Info uploadFile(MultipartFile file, S3Directory dir);
+    public S3Info uploadFile(MultipartFile file, S3Directory dir) throws IOException;
 
-    public List<S3Info> uploadFiles(List<MultipartFile> files, S3Directory dir);
+    public List<S3Info> uploadFiles(List<MultipartFile> files, S3Directory dir) throws IOException;
 
     public void deleteFile(String path);
 

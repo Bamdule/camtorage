@@ -43,11 +43,6 @@ public class UserController {
         return ResponseEntity.ok(user);
     }
 
-    @PostMapping(value = "/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity updateUserImage(@LoginUser UserPayload userPayload, MultipartFile userImage) {
-        String url = userService.updateUserImage(userPayload.getUserId(), userImage);
-        return ResponseEntity.ok(url);
-    }
 
     @PostMapping
     public ResponseEntity joinUser(
@@ -61,18 +56,24 @@ public class UserController {
                 .body(userTO);
     }
 
-    @PutMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity updateUser(@LoginUser UserPayload userPayload, UserUpdateTO userUpdateTO, MultipartFile userImage) {
+    @PutMapping(consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    public ResponseEntity updateUser(@LoginUser UserPayload userPayload, UserUpdateTO userUpdateTO) {
 
         userUpdateTO.setId(userPayload.getUserId());
+        userService.updateUser(userUpdateTO);
 
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping(value = "/profile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity uploadUserImage(@LoginUser UserPayload userPayload, MultipartFile userImage) {
+    @PostMapping(value = "/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity updateUserImage(@LoginUser UserPayload userPayload, MultipartFile userImage) {
+        String url = userService.updateUserImage(userPayload.getUserId(), userImage);
+        return ResponseEntity.ok(url);
+    }
 
-
+    @DeleteMapping(value = "/image")
+    public ResponseEntity deleteUserImage(@LoginUser UserPayload userPayload) {
+        userService.deleteUserImage(userPayload.getUserId());
         return ResponseEntity.noContent().build();
     }
 

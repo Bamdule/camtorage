@@ -22,35 +22,35 @@ public class S3ServiceImpl implements S3Service {
     private PathUtil pathUtil;
 
     @Override
-    public S3Info uploadFile(MultipartFile file, S3Directory dir) {
+    public S3Info uploadFile(MultipartFile file, S3Directory dir) throws IOException {
 
-        try {
+//        try {
             return this.uploadToS3(file, dir);
-        } catch (IOException e) {
-            throw new CustomException(ExceptionCode.AWS_S3_UPLOAD_ERROR);
-        }
+//        } catch (IOException e) {
+//            throw new CustomException(ExceptionCode.AWS_S3_UPLOAD_ERROR);
+//        }
     }
 
     @Override
-    public List<S3Info> uploadFiles(List<MultipartFile> files, S3Directory dir) {
+    public List<S3Info> uploadFiles(List<MultipartFile> files, S3Directory dir) throws IOException {
 
 
         List<S3Info> s3Infos = new ArrayList<>();
 
         for (MultipartFile file : files) {
-            try {
+//            try {
 
                 S3Info s3Info = this.uploadToS3(file, dir);
                 s3Infos.add(s3Info);
 
-            } catch (IOException e) {
-
-                s3Infos.forEach(info -> {
-                    awsS3.delete(info.getPath());
-                });
-
-                throw new CustomException(ExceptionCode.AWS_S3_UPLOAD_ERROR);
-            }
+//            } catch (Exception e) {
+//
+//                s3Infos.forEach(info -> {
+//                    awsS3.delete(info.getPath());
+//                });
+//
+//                throw new CustomException(ExceptionCode.AWS_S3_UPLOAD_ERROR);
+//            }
 
         }
 

@@ -10,7 +10,7 @@ public interface UserService {
 
     public UserTO saveUser(UserTO userTO);
 
-    public void updateUser(UserUpdateTO userUpdateTO, MultipartFile file);
+    public void updateUser(UserUpdateTO userUpdateTO);
 
     public String updateUserImage(Integer userId, MultipartFile file);
 

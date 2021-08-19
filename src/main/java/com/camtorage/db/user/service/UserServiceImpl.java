@@ -65,7 +65,7 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public void updateUser(UserUpdateTO userUpdateTO, MultipartFile file) {
+    public void updateUser(UserUpdateTO userUpdateTO) {
         Optional<User> optionalUser = userRepository.findById(userUpdateTO.getId());
 
         if (optionalUser.isEmpty()) {
@@ -92,21 +92,21 @@ public class UserServiceImpl implements UserService {
         }
 
         User user = optionalUser.get();
-        String path = "";
 
         Integer userImageId = user.getUserImageId();
 
-        if (userImageId != null) {
-            Image image = fileService.updateFile(file, S3Directory.USER, userImageId);
-            path = image.getPath();
-        } else {
-            Image image = fileService.saveFile(file, S3Directory.USER);
-            user.setImage(image);
-            path = image.getPath();
-            userRepository.save(user);
-        }
+        Image image = null;
 
-        return pathUtil.getUrlWithDomain(path);
+        if (userImageId == null) {
+            image = fileService.saveFile(file, S3Directory.USER);
+
+        } else {
+            image = fileService.updateFile(file, S3Directory.USER, userImageId);
+        }
+        user.setImage(image);
+        userRepository.save(user);
+
+        return pathUtil.getUrlWithDomain(image.getPath());
     }
 
     @Override
@@ -116,8 +116,14 @@ public class UserServiceImpl implements UserService {
         if (optionalUser.isEmpty()) {
             throw new CustomException(ExceptionCode.USER_NOT_EXISTED);
         }
+        User user = optionalUser.get();
 
-        fileService.deleteFile(optionalUser.get().getImage().getId());
+        if (user.getImage() != null) {
+            int imageId = user.getImage().getId();
+            user.setImage(null);
+            userRepository.save(user);
+            fileService.deleteFile(imageId);
+        }
     }
 
     @Override
