@@ -49,11 +49,12 @@ public class GearRepositoryImpl implements GearRepositoryCustom {
                 gear.color,
                 gear.company,
                 gear.name,
+                gear.price,
                 gearType.id.as("gearTypeId"),
                 gearType.name.as("gearTypeName")
         ))
                 .from(gear)
-                .join(gearType).on(gearType.id.eq(gear.gearTypeId))
+                .leftJoin(gearType).on(gearType.id.eq(gear.gearTypeId))
                 .where(gear.user.id.eq(userId))
                 .fetch();
     }

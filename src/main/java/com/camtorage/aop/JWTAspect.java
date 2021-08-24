@@ -24,7 +24,6 @@ public class JWTAspect {
     @Before("@annotation(com.camtorage.aop.UserJWTCheck)")
     public void memberLoginCheck(JoinPoint jp) {
         System.out.println("[MYTEST] GOGO!!");
-
     }
 
     @Around("execution(* *(.., @LoginUser (*), ..))")

@@ -77,7 +77,7 @@ public class FileServiceImpl implements FileService {
         Optional<Image> optionalImage = imageRepository.findById(imageId);
 
         if (optionalImage.isEmpty()) {
-            throw new RuntimeException();
+            throw new CustomException(ExceptionCode.IMAGE_ID_NOT_EXISTED);
         }
 
         Image image = optionalImage.get();
@@ -103,7 +103,7 @@ public class FileServiceImpl implements FileService {
         Optional<Image> optionalImage = imageRepository.findById(imageId);
 
         if (optionalImage.isEmpty()) {
-            throw new RuntimeException();
+            throw new CustomException(ExceptionCode.IMAGE_ID_NOT_EXISTED);
         }
 
         Image image = optionalImage.get();

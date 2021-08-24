@@ -50,16 +50,8 @@ public class GearServiceImpl implements GearService {
         if (optionalUser.isEmpty()) {
             throw new CustomException(ExceptionCode.USER_NOT_EXISTED);
         }
-
-        Gear gear = Gear.builder()
-                .name(gearTO.getName())
-                .gearTypeId(gearTO.getGearTypeId())
-                .color(gearTO.getColor())
-                .capacity(gearTO.getCapacity())
-                .company(gearTO.getCompany())
-                .gearTypeId(gearTO.getGearTypeId())
-                .user(optionalUser.get())
-                .build();
+        Gear gear = gearTO.getGear();
+        gear.setUser(optionalUser.get());
 
         gearRepository.save(gear);
 
@@ -74,6 +66,68 @@ public class GearServiceImpl implements GearService {
 
             gearImageRepository.save(gearImage);
         }
+    }
+
+    @Transactional
+    @Override
+    public void updateGear(Integer userId, GearTO gearTO, List<GearImageTO> gearImages) {
+        if (gearTO.getId() == null) {
+            throw new CustomException(ExceptionCode.GEAR_NOT_EXISTED);
+        }
+        Optional<Gear> optionalGear = gearRepository.findById(gearTO.getId());
+
+        if (optionalGear.isEmpty()) {
+            throw new CustomException(ExceptionCode.GEAR_NOT_EXISTED);
+        }
+        Gear gear = optionalGear.get();
+
+        gear.setGearTypeId(gearTO.getGearTypeId());
+        gear.setCapacity(gearTO.getCapacity());
+        gear.setColor(gearTO.getColor());
+        gear.setCompany(gearTO.getCompany());
+        gear.setName(gearTO.getName());
+        gear.setPrice(gearTO.getPrice());
+
+        gearRepository.save(gear);
+
+        for (GearImageTO gearImageTO : gearImages) {
+            if (gearImageTO.getImageId() == null && gearImageTO.getImage() != null) {
+                Image image = fileService.saveFile(gearImageTO.getImage(), S3Directory.GEAR);
+                GearImage gearImage = GearImage.builder()
+                        .gear(gear)
+                        .image(image)
+                        .build();
+
+                gearImageRepository.save(gearImage);
+
+            } else if (gearImageTO.getImageId() != null && gearImageTO.getImage() != null) {
+                fileService.updateFile(gearImageTO.getImage(), S3Directory.GEAR, gearImageTO.getImageId());
+            } else if (gearImageTO.getImageId() != null && gearImageTO.getImage() == null) {
+                fileService.deleteFile(gearImageTO.getImageId());
+            }
+        }
+
+    }
+
+    @Override
+    @Transactional
+    public void deleteGear(Integer gearId) {
+        if (gearId == null) {
+            throw new CustomException(ExceptionCode.GEAR_NOT_EXISTED);
+        }
+        Optional<Gear> optionalGear = gearRepository.findById(gearId);
+
+        if (optionalGear.isEmpty()) {
+            throw new CustomException(ExceptionCode.GEAR_NOT_EXISTED);
+        }
+        Gear gear = optionalGear.get();
+        List<GearImage> gearImages = gearImageRepository.findAllByGearId(gearId);
+
+        for (GearImage gearImage : gearImages) {
+            gearImageRepository.delete(gearImage);
+            fileService.deleteFile(gearImage.getImage().getId());
+        }
+        gearRepository.delete(gear);
     }
 
     @Override
