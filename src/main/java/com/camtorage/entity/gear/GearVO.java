@@ -24,7 +24,7 @@ public class GearVO {
 
     private String capacity;
 
-    private Integer price;
+    private Integer price = 0;
 
-    private List<GearImageVO> gearImages;
+    private String buyDt;
 }

@@ -1,6 +1,7 @@
 package com.camtorage.db.gear.service;
 
 import com.camtorage.entity.gear.GearImageTO;
+import com.camtorage.entity.gear.GearImageVO;
 import com.camtorage.entity.gear.GearTO;
 import com.camtorage.entity.gear.GearVO;
 import org.springframework.web.multipart.MultipartFile;
@@ -16,4 +17,8 @@ public interface GearService {
     public void deleteGear(Integer gearId);
 
     public List<GearVO> getListGear(Integer userId);
+
+    public List<GearImageVO> getListGearImage(Integer userId, Integer gearId);
+
+    public long getCountGear(Integer userId);
 }

@@ -5,6 +5,8 @@ import com.camtorage.aws.S3Info;
 import com.camtorage.aws.S3Service;
 import com.camtorage.common.util.PathUtil;
 import com.camtorage.db.file.service.FileService;
+import com.camtorage.db.friend.service.FriendService;
+import com.camtorage.db.gear.service.GearService;
 import com.camtorage.db.image.service.ImageService;
 import com.camtorage.db.user.repository.UserRepository;
 import com.camtorage.entity.image.Image;
@@ -37,6 +39,11 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
 
     @Autowired
+    private FriendService friendService;
+
+    @Autowired
+    private GearService gearService;
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
     @Autowired
@@ -53,12 +60,14 @@ public class UserServiceImpl implements UserService {
                 .email(userTO.getEmail())
                 .password(passwordEncoder.encode(userTO.getPassword()))
                 .joinDt(LocalDateTime.now())
+                .isPublic(true)
                 .build();
 
         userRepository.save(user);
 
         userTO.setId(user.getId());
         userTO.setPassword(null);
+        userTO.setIsPublic(user.getIsPublic());
 
         return userTO;
     }
@@ -75,6 +84,7 @@ public class UserServiceImpl implements UserService {
 
         user.setName(userUpdateTO.getName());
         user.setPhone(userUpdateTO.getPhone());
+        user.setIsPublic(userUpdateTO.isPublic());
 
         if (!userUpdateTO.getPassword().isBlank()) {
             user.setPassword(passwordEncoder.encode(userUpdateTO.getPassword()));
@@ -164,5 +174,23 @@ public class UserServiceImpl implements UserService {
 
         return user;
 
+    }
+
+    @Override
+    public UserWrapperVO getUserInfo(Integer id) {
+
+        return UserWrapperVO.builder()
+                .user(this.getUser(id))
+                .followerCnt(friendService.getCountFollower(id))
+                .followingCnt(friendService.getCountFollowing(id))
+                .gearCnt(gearService.getCountGear(id))
+                .boardCnt(0)
+                .code("ok")
+                .build();
+    }
+
+    @Override
+    public Boolean isPublic(Integer id) {
+        return userRepository.findUserByIdAndIsPublic(id, true).isPresent();
     }
 }

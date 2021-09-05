@@ -28,6 +28,9 @@ public class UserTO {
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private String phone;
 
+    private Boolean isPublic;
+
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private String token;
+
 }

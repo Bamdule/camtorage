@@ -11,4 +11,6 @@ public interface GearRepositoryCustom {
 
     public List<GearVO> getListGear(Integer userId);
 
+    public long getCountGear(Integer userId);
+
 }

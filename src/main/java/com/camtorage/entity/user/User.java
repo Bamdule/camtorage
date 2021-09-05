@@ -28,6 +28,8 @@ public class User {
 
     private String phone;
 
+    private Boolean isPublic = true;
+
     @Column(name = "join_dt", updatable = false)
     private LocalDateTime joinDt;
 

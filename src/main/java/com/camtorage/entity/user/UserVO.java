@@ -20,9 +20,14 @@ public class UserVO {
 
     private String phone;
 
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private Integer userImageId;
 
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String userImageUrl;
 
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String userImagePath;
+
+    private Boolean isPublic;
 }

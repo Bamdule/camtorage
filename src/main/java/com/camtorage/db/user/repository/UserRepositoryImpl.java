@@ -27,6 +27,7 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
                         user.name,
                         user.email,
                         user.phone,
+                        user.isPublic.as("isPublic"),
                         user.image.id.as("userImageId"),
                         user.image.path.as("userImagePath")
                 ))

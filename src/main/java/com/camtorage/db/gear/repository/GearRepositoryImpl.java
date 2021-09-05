@@ -49,7 +49,8 @@ public class GearRepositoryImpl implements GearRepositoryCustom {
                 gear.color,
                 gear.company,
                 gear.name,
-                gear.price,
+                gear.price.coalesce(0).as("price"),
+                gear.buyDt,
                 gearType.id.as("gearTypeId"),
                 gearType.name.as("gearTypeName")
         ))
@@ -57,5 +58,15 @@ public class GearRepositoryImpl implements GearRepositoryCustom {
                 .leftJoin(gearType).on(gearType.id.eq(gear.gearTypeId))
                 .where(gear.user.id.eq(userId))
                 .fetch();
+    }
+
+    @Override
+    public long getCountGear(Integer userId) {
+        JPAQueryFactory query = new JPAQueryFactory(em);
+
+        return query.select(gear)
+                .from(gear)
+                .where(gear.user.id.eq(userId))
+                .fetchCount();
     }
 }

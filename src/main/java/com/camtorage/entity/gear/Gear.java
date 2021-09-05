@@ -25,7 +25,9 @@ public class Gear {
 
     private String capacity;
 
-    private Integer price;
+    private Integer price = 0;
+
+    private String buyDt;
 
     @Column(name = "gear_type_id", nullable = false)
     private Integer gearTypeId;

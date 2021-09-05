@@ -15,6 +15,7 @@ import com.camtorage.exception.CustomException;
 import com.camtorage.exception.ExceptionCode;
 import com.camtorage.property.AwsS3Property;
 import com.camtorage.property.ServerProperty;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,6 +43,9 @@ public class GearServiceImpl implements GearService {
     @Autowired
     private ServerProperty serverProperty;
 
+    @Autowired
+    private ModelMapper modelMapper;
+
 
     @Transactional
     @Override
@@ -50,7 +54,8 @@ public class GearServiceImpl implements GearService {
         if (optionalUser.isEmpty()) {
             throw new CustomException(ExceptionCode.USER_NOT_EXISTED);
         }
-        Gear gear = gearTO.getGear();
+
+        Gear gear = modelMapper.map(gearTO, Gear.class);
         gear.setUser(optionalUser.get());
 
         gearRepository.save(gear);
@@ -87,6 +92,7 @@ public class GearServiceImpl implements GearService {
         gear.setCompany(gearTO.getCompany());
         gear.setName(gearTO.getName());
         gear.setPrice(gearTO.getPrice());
+        gear.setBuyDt(gearTO.getBuyDt());
 
         gearRepository.save(gear);
 
@@ -132,25 +138,33 @@ public class GearServiceImpl implements GearService {
 
     @Override
     public List<GearVO> getListGear(Integer userId) {
-        AwsS3Property awsS3Property = serverProperty.getAwsS3Property();
 
         List<GearVO> gears = gearRepository.getListGear(userId);
 
-        for (GearVO gear : gears) {
-            List<GearImageVO> gearImages = gearRepository.getListGearImage(gear.getId());
+        return gears;
+    }
 
-            gearImages.forEach(gearImage -> {
+    @Override
+    public List<GearImageVO> getListGearImage(Integer userId, Integer gearId) {
+        List<GearImageVO> gearImages = gearRepository.getListGearImage(gearId);
+        AwsS3Property awsS3Property = serverProperty.getAwsS3Property();
+
+        gearImages.forEach(gearImage -> {
+            if (gearImage.getUrl() != null) {
                 gearImage.setUrl(new StringBuilder()
                         .append(awsS3Property.getDomain())
                         .append(gearImage.getUrl())
                         .toString()
                 );
+            }
 
-            });
+        });
 
-            gear.setGearImages(gearImages);
-        }
+        return gearImages;
+    }
 
-        return gears;
+    @Override
+    public long getCountGear(Integer userId) {
+        return gearRepository.getCountGear(userId);
     }
 }

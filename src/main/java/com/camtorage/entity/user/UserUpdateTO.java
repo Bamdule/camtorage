@@ -19,4 +19,6 @@ public class UserUpdateTO {
     private String name;
 
     private String phone;
+
+    private boolean isPublic;
 }

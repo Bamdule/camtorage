@@ -22,18 +22,8 @@ public class GearTO {
 
     private String capacity;
 
-    private Integer price;
+    private Integer price = 0;
 
-    public Gear getGear() {
-        return Gear.builder()
-                .id(this.id)
-                .name(this.name)
-                .gearTypeId(this.gearTypeId)
-                .color(this.color)
-                .capacity(this.capacity)
-                .company(this.company)
-                .price(this.price)
-                .build();
-    }
+    private String buyDt;
 
 }

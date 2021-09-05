@@ -2,11 +2,15 @@ package com.camtorage.controller;
 
 import com.camtorage.aop.LoginUser;
 import com.camtorage.aop.UserJWTCheck;
+import com.camtorage.db.friend.service.FriendService;
 import com.camtorage.db.gear.service.GearService;
+import com.camtorage.db.user.service.UserService;
 import com.camtorage.entity.gear.GearImageTO;
 import com.camtorage.entity.gear.GearImageWrap;
 import com.camtorage.entity.gear.GearTO;
 import com.camtorage.entity.gear.GearVO;
+import com.camtorage.exception.CustomException;
+import com.camtorage.exception.ExceptionCode;
 import com.camtorage.jwt.UserPayload;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,48 +32,20 @@ public class GearController {
     @Autowired
     private GearService gearService;
 
-    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity saveGear(@LoginUser UserPayload userPayload, GearTO gear, List<MultipartFile> gearImages) {
+    @Autowired
+    private FriendService friendService;
 
-        gearService.saveGear(userPayload.getUserId(), gear, gearImages);
+    @Autowired
+    private UserService userService;
 
-        return ResponseEntity.noContent().build();
+    @GetMapping(value = "/{userId}")
+    public ResponseEntity getGear(@LoginUser UserPayload userPayload, @PathVariable(value = "userId") Integer userId) {
+
+        if (!(userService.isPublic(userId) || friendService.isFriend(userPayload.getUserId(), userId))) {
+            throw new CustomException(ExceptionCode.USER_PRIVATE);
+        }
+
+        return ResponseEntity.ok(gearService.getListGear(userId));
     }
-
-    @PutMapping(value = "/{gearId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity updateGear(
-            @LoginUser UserPayload userPayload,
-            @PathVariable(value = "gearId") Integer gearId,
-            GearTO gear,
-            @ModelAttribute(value = "gearImages") GearImageWrap gearImageWrap
-    ) {
-        gear.setId(gearId);
-        logger.info("[MYTEST] {} {}", gear, gearImageWrap.getGearImages().size());
-
-        gearService.updateGear(userPayload.getUserId(), gear, gearImageWrap.getGearImages());
-
-        return ResponseEntity.noContent().build();
-    }
-
-    @DeleteMapping(value = "/{gearId}")
-    public ResponseEntity deleteGear(@LoginUser UserPayload userPayload, @PathVariable(value = "gearId") Integer gearId) {
-        gearService.deleteGear(gearId);
-        return ResponseEntity.noContent().build();
-    }
-
-    @GetMapping
-    public ResponseEntity<List<GearVO>> getListMyGear(@LoginUser UserPayload userPayload) {
-        return ResponseEntity.ok(gearService.getListGear(userPayload.getUserId()));
-    }
-
-
-//    @UserJWTCheck
-//    @GetMapping
-//    public ResponseEntity<List<GearVO>> getListMyGear(@RequestHeader Map<String, Object> header) {
-//        String accessToken = (String) header.get("authorization");
-//        UserPayload userPayload = userJWT.verifyJWT(accessToken);
-//        return ResponseEntity.ok(gearService.getListGear(userPayload.getUserId()));
-//    }
-
 
 }

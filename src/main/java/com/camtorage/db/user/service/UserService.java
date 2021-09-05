@@ -1,9 +1,6 @@
 package com.camtorage.db.user.service;
 
-import com.camtorage.entity.user.UserTO;
-import com.camtorage.entity.user.UserToken;
-import com.camtorage.entity.user.UserUpdateTO;
-import com.camtorage.entity.user.UserVO;
+import com.camtorage.entity.user.*;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface UserService {
@@ -19,4 +16,8 @@ public interface UserService {
     public UserToken loginUser(String email, String password);
 
     public UserVO getUser(Integer id);
+
+    public UserWrapperVO getUserInfo(Integer id);
+
+    public Boolean isPublic(Integer id);
 }
