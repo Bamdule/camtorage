@@ -38,19 +38,9 @@ public class S3ServiceImpl implements S3Service {
         List<S3Info> s3Infos = new ArrayList<>();
 
         for (MultipartFile file : files) {
-//            try {
 
                 S3Info s3Info = this.uploadToS3(file, dir);
                 s3Infos.add(s3Info);
-
-//            } catch (Exception e) {
-//
-//                s3Infos.forEach(info -> {
-//                    awsS3.delete(info.getPath());
-//                });
-//
-//                throw new CustomException(ExceptionCode.AWS_S3_UPLOAD_ERROR);
-//            }
 
         }
 

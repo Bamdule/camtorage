@@ -1,13 +1,10 @@
 package com.camtorage.db.gear.service;
 
 import com.camtorage.aws.S3Directory;
-import com.camtorage.aws.S3Info;
-import com.camtorage.aws.S3Service;
 import com.camtorage.db.file.service.FileService;
 import com.camtorage.db.gear.repository.GearImageRepository;
 import com.camtorage.db.gear.repository.GearRepository;
 import com.camtorage.db.user.repository.UserRepository;
-import com.camtorage.db.image.service.ImageService;
 import com.camtorage.entity.gear.*;
 import com.camtorage.entity.image.Image;
 import com.camtorage.entity.user.User;
@@ -21,8 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.util.ArrayList;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -49,16 +45,17 @@ public class GearServiceImpl implements GearService {
 
     @Transactional
     @Override
-    public void saveGear(Integer userId, GearTO gearTO, List<MultipartFile> files) {
-        Optional<User> optionalUser = userRepository.findById(userId);
-        if (optionalUser.isEmpty()) {
-            throw new CustomException(ExceptionCode.USER_NOT_EXISTED);
-        }
+    public GearResponse saveGear(Integer userId, GearRequest gearRequest, List<MultipartFile> files) {
+        User user = userRepository
+                .findById(userId)
+                .orElseThrow(() -> new CustomException(ExceptionCode.USER_NOT_EXISTED));
 
-        Gear gear = modelMapper.map(gearTO, Gear.class);
-        gear.setUser(optionalUser.get());
+        Gear gear = modelMapper.map(gearRequest, Gear.class);
+        gear.setUser(user);
+        gear.setCreateDt(LocalDateTime.now());
+        gear.setUpdateDt(LocalDateTime.now());
 
-        gearRepository.save(gear);
+        gear = gearRepository.save(gear);
 
         List<Image> images = fileService.saveFiles(files, S3Directory.GEAR);
 
@@ -71,30 +68,27 @@ public class GearServiceImpl implements GearService {
 
             gearImageRepository.save(gearImage);
         }
+
+        return modelMapper.map(gear, GearResponse.class);
     }
 
     @Transactional
     @Override
-    public void updateGear(Integer userId, GearTO gearTO, List<GearImageTO> gearImages) {
-        if (gearTO.getId() == null) {
-            throw new CustomException(ExceptionCode.GEAR_NOT_EXISTED);
-        }
-        Optional<Gear> optionalGear = gearRepository.findById(gearTO.getId());
+    public void updateGear(Integer userId, Integer gearId, GearRequest gearRequest, List<GearImageTO> gearImages) {
 
-        if (optionalGear.isEmpty()) {
-            throw new CustomException(ExceptionCode.GEAR_NOT_EXISTED);
-        }
-        Gear gear = optionalGear.get();
 
-        gear.setGearTypeId(gearTO.getGearTypeId());
-        gear.setCapacity(gearTO.getCapacity());
-        gear.setColor(gearTO.getColor());
-        gear.setCompany(gearTO.getCompany());
-        gear.setName(gearTO.getName());
-        gear.setPrice(gearTO.getPrice());
-        gear.setBuyDt(gearTO.getBuyDt());
+        Gear gear = gearRepository
+                .findById(gearId)
+                .orElseThrow(() -> new CustomException(ExceptionCode.GEAR_NOT_EXISTED));
 
-        gearRepository.save(gear);
+        gear.setGearTypeId(gearRequest.getGearTypeId());
+        gear.setCapacity(gearRequest.getCapacity());
+        gear.setColor(gearRequest.getColor());
+        gear.setCompany(gearRequest.getCompany());
+        gear.setName(gearRequest.getName());
+        gear.setPrice(gearRequest.getPrice());
+        gear.setBuyDt(gearRequest.getBuyDt());
+        gear.setUpdateDt(LocalDateTime.now());
 
         for (GearImageTO gearImageTO : gearImages) {
             if (gearImageTO.getImageId() == null && gearImageTO.getImage() != null) {
@@ -137,9 +131,9 @@ public class GearServiceImpl implements GearService {
     }
 
     @Override
-    public List<GearVO> getListGear(Integer userId) {
+    public List<GearResponse> getListGear(Integer userId) {
 
-        List<GearVO> gears = gearRepository.getListGear(userId);
+        List<GearResponse> gears = gearRepository.getListGear(userId);
 
         return gears;
     }

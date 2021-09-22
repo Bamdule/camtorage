@@ -11,7 +11,7 @@ import lombok.*;
 public class UserWrapperVO {
 
     private String code = "ok";
-    private UserVO user;
+    private UserResponse user;
 
     private long followerCnt = 0;
     private long followingCnt = 0;

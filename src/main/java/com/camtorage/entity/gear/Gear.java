@@ -5,6 +5,7 @@ import com.camtorage.entity.user.User;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -28,6 +29,12 @@ public class Gear {
     private Integer price = 0;
 
     private String buyDt;
+
+    @Column(name = "create_dt", nullable = true)
+    private LocalDateTime createDt;
+
+    @Column(name = "update_dt", nullable = true)
+    private LocalDateTime updateDt;
 
     @Column(name = "gear_type_id", nullable = false)
     private Integer gearTypeId;

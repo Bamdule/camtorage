@@ -11,7 +11,7 @@ import javax.validation.constraints.NotBlank;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class UserVO {
+public class UserResponse {
     private Integer id;
 
     private String name;

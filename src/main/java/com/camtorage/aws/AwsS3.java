@@ -40,6 +40,10 @@ public class AwsS3 {
     public void init(String accessKey, String secretKey, String region, String bucket) {
         this.bucket = bucket;
 
+        if (accessKey == null || secretKey == null) {
+            return;
+        }
+
         AWSCredentials credentials = new BasicAWSCredentials(
                 accessKey,
                 secretKey

@@ -5,7 +5,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 public interface UserService {
 
-    public UserTO saveUser(UserTO userTO);
+    public UserResponse saveUser(UserRequest userRequest);
 
     public void updateUser(UserUpdateTO userUpdateTO);
 
@@ -15,7 +15,7 @@ public interface UserService {
 
     public UserToken loginUser(String email, String password);
 
-    public UserVO getUser(Integer id);
+    public UserResponse getUser(Integer id);
 
     public UserWrapperVO getUserInfo(Integer id);
 

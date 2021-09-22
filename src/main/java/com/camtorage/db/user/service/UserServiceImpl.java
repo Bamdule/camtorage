@@ -1,13 +1,10 @@
 package com.camtorage.db.user.service;
 
 import com.camtorage.aws.S3Directory;
-import com.camtorage.aws.S3Info;
-import com.camtorage.aws.S3Service;
 import com.camtorage.common.util.PathUtil;
 import com.camtorage.db.file.service.FileService;
 import com.camtorage.db.friend.service.FriendService;
 import com.camtorage.db.gear.service.GearService;
-import com.camtorage.db.image.service.ImageService;
 import com.camtorage.db.user.repository.UserRepository;
 import com.camtorage.entity.image.Image;
 import com.camtorage.entity.user.*;
@@ -15,12 +12,12 @@ import com.camtorage.exception.CustomException;
 import com.camtorage.exception.ExceptionCode;
 import com.camtorage.jwt.UserJWT;
 import com.camtorage.jwt.UserPayload;
-import com.camtorage.property.AwsS3Property;
-import com.camtorage.property.ServerProperty;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
@@ -47,29 +44,32 @@ public class UserServiceImpl implements UserService {
     private PasswordEncoder passwordEncoder;
 
     @Autowired
+    private ModelMapper modelMapper;
+
+    @Autowired
     private UserJWT userJWT;
 
     @Override
-    public UserTO saveUser(UserTO userTO) {
-
-        if (userRepository.findUserByEmail(userTO.getEmail()).isPresent()) {
-            throw new CustomException(ExceptionCode.ALREADY_JOINED);
-        }
+    public UserResponse saveUser(UserRequest userRequest) {
+        userRepository
+                .findUserByEmail(userRequest.getEmail())
+                .ifPresent((user) -> {
+                    throw new CustomException(ExceptionCode.ALREADY_JOINED);
+                });
 
         User user = User.builder()
-                .email(userTO.getEmail())
-                .password(passwordEncoder.encode(userTO.getPassword()))
+                .email(userRequest.getEmail())
+                .password(passwordEncoder.encode(userRequest.getPassword()))
                 .joinDt(LocalDateTime.now())
                 .isPublic(true)
                 .build();
 
         userRepository.save(user);
 
-        userTO.setId(user.getId());
-        userTO.setPassword(null);
-        userTO.setIsPublic(user.getIsPublic());
+        userRequest.setId(user.getId());
+        userRequest.setIsPublic(user.getIsPublic());
 
-        return userTO;
+        return modelMapper.map(userRequest, UserResponse.class);
     }
 
     @Transactional
@@ -163,12 +163,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserVO getUser(Integer id) {
-        UserVO user = userRepository.getUserById(id);
+    public UserResponse getUser(Integer id) {
 
-        if (user == null) {
-            throw new CustomException(ExceptionCode.USER_NOT_EXISTED);
-        }
+        UserResponse user = userRepository
+                .getUserById(id)
+                .orElseThrow(() -> new CustomException(ExceptionCode.USER_NOT_EXISTED));
 
         user.setUserImageUrl(pathUtil.getUrlWithDomain(user.getUserImagePath()));
 

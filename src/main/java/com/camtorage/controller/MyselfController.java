@@ -7,10 +7,9 @@ import com.camtorage.db.user.service.UserService;
 import com.camtorage.entity.friend.FriendVO;
 import com.camtorage.entity.friend.FriendWrapper;
 import com.camtorage.entity.gear.GearImageWrap;
-import com.camtorage.entity.gear.GearTO;
-import com.camtorage.entity.gear.GearVO;
+import com.camtorage.entity.gear.GearRequest;
+import com.camtorage.entity.gear.GearResponse;
 import com.camtorage.entity.user.UserUpdateTO;
-import com.camtorage.entity.user.UserVO;
 import com.camtorage.entity.user.UserWrapperVO;
 import com.camtorage.jwt.UserPayload;
 import org.slf4j.Logger;
@@ -21,6 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -84,11 +84,11 @@ public class MyselfController {
     내 장비 등록
      */
     @PostMapping(value = "/gear", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity saveGear(@LoginUser UserPayload userPayload, GearTO gear, List<MultipartFile> gearImages) {
+    public ResponseEntity saveGear(@LoginUser UserPayload userPayload, @Valid GearRequest gear, List<MultipartFile> gearImages) {
 
-        gearService.saveGear(userPayload.getUserId(), gear, gearImages);
+        GearResponse gearResponse = gearService.saveGear(userPayload.getUserId(), gear, gearImages);
 
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(gearResponse);
     }
 
     /*
@@ -98,11 +98,10 @@ public class MyselfController {
     public ResponseEntity updateGear(
             @LoginUser UserPayload userPayload,
             @PathVariable(value = "gearId") Integer gearId,
-            GearTO gear,
+            GearRequest gear,
             @ModelAttribute(value = "gearImages") GearImageWrap gearImageWrap
     ) {
-        gear.setId(gearId);
-        gearService.updateGear(userPayload.getUserId(), gear, gearImageWrap.getGearImages());
+        gearService.updateGear(userPayload.getUserId(), gearId, gear, gearImageWrap.getGearImages());
 
         return ResponseEntity.noContent().build();
     }
@@ -120,7 +119,7 @@ public class MyselfController {
     내 장비 조회
      */
     @GetMapping(value = "/gear")
-    public ResponseEntity<List<GearVO>> getListGear(@LoginUser UserPayload userPayload) {
+    public ResponseEntity<List<GearResponse>> getListGear(@LoginUser UserPayload userPayload) {
         return ResponseEntity.ok(gearService.getListGear(userPayload.getUserId()));
     }
 

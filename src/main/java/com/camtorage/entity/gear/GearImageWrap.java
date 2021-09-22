@@ -9,5 +9,5 @@ import java.util.List;
 @Getter
 @Setter
 public class GearImageWrap {
-    List<GearImageTO> gearImages = new ArrayList<>();
+    private List<GearImageTO> gearImages = new ArrayList<>();
 }
