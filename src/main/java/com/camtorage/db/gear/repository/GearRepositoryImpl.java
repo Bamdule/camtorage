@@ -2,7 +2,9 @@ package com.camtorage.db.gear.repository;
 
 import com.camtorage.entity.gear.GearImageVO;
 import com.camtorage.entity.gear.GearResponse;
+import com.querydsl.core.types.ConstantImpl;
 import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -41,7 +43,6 @@ public class GearRepositoryImpl implements GearRepositoryCustom {
     public List<GearResponse> getListGear(Integer userId) {
 
         JPAQueryFactory query = new JPAQueryFactory(em);
-
         return query.select(Projections.bean(
                 GearResponse.class,
                 gear.id,
@@ -51,6 +52,8 @@ public class GearRepositoryImpl implements GearRepositoryCustom {
                 gear.name,
                 gear.price.coalesce(0).as("price"),
                 gear.buyDt,
+                gear.createDt,
+                gear.updateDt,
                 gearType.id.as("gearTypeId"),
                 gearType.name.as("gearTypeName")
         ))

@@ -23,6 +23,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import javax.transaction.Transactional;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -76,8 +77,6 @@ class MyselfControllerTest {
     public void 장비_저장_성공() throws Exception {
         GearRequest gearRequest = createGearRequest(1);
 
-        System.out.println(userToken.getToken());
-
         mockMvc.perform(post("/api/myself/gear")
                 .contentType(MediaType.MULTIPART_FORM_DATA)
                 .header("authorization", userToken.getToken())
@@ -95,25 +94,15 @@ class MyselfControllerTest {
     }
 
     @Test
-    @DisplayName("save_gear_success")
-    public void 장비_저장_성공2() throws Exception {
+    @DisplayName("장비 조회")
+    public void getListGear() throws Exception {
         GearRequest gearRequest = createGearRequest(1);
 
-        System.out.println(userToken.getToken());
-
-        mockMvc.perform(post("/api/myself/gear")
+        mockMvc.perform(get("/api/myself/gear")
                 .contentType(MediaType.MULTIPART_FORM_DATA)
-                .header("authorization", userToken.getToken())
-                .param("name", gearRequest.getName())
-                .param("capacity", gearRequest.getCapacity())
-                .param("buyDt", gearRequest.getBuyDt())
-                .param("company", gearRequest.getCompany())
-                .param("color", gearRequest.getColor())
-                .param("gearTypeId", String.valueOf(gearRequest.getGearTypeId()))
-                .param("price", String.valueOf(gearRequest.getPrice())))
+                .header("authorization", userToken.getToken()))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("name").value(gearRequest.getName()))
         ;
     }
 
