@@ -210,4 +210,7 @@ public class MyselfController {
                         .build()
         );
     }
+
+//    @GetMapping(value = "/friend/search")
+//    public ResponseEntity searchFriend
 }

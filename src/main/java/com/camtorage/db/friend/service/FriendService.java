@@ -1,6 +1,8 @@
 package com.camtorage.db.friend.service;
 
+import com.camtorage.entity.user.UserSearch;
 import com.camtorage.entity.friend.FriendVO;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -19,7 +21,10 @@ public interface FriendService {
     public boolean isFriend(Integer userId, Integer friendId);
 
     public long getCountFollower(Integer userId);
+
     public long getCountFollowing(Integer userId);
+
+    public List<FriendVO> searchFriend(UserSearch userSearch, Pageable pageable);
 
 
 }

@@ -6,6 +6,7 @@ import com.camtorage.db.gear.repository.GearImageRepository;
 import com.camtorage.db.gear.repository.GearRepository;
 import com.camtorage.db.user.repository.UserRepository;
 import com.camtorage.entity.gear.*;
+import com.camtorage.entity.image.FileStatus;
 import com.camtorage.entity.image.Image;
 import com.camtorage.entity.user.User;
 import com.camtorage.exception.CustomException;
@@ -91,22 +92,29 @@ public class GearServiceImpl implements GearService {
         gear.setUpdateDt(LocalDateTime.now());
 
         for (GearImageTO gearImageTO : gearImages) {
-            if (gearImageTO.getImageId() == null && gearImageTO.getImage() != null) {
-                Image image = fileService.saveFile(gearImageTO.getImage(), S3Directory.GEAR);
-                GearImage gearImage = GearImage.builder()
-                        .gear(gear)
-                        .image(image)
-                        .build();
 
-                gearImageRepository.save(gearImage);
+            FileStatus status = FileStatus.get(gearImageTO.getImageId(), gearImageTO.getImage());
 
-            } else if (gearImageTO.getImageId() != null && gearImageTO.getImage() != null) {
-                fileService.updateFile(gearImageTO.getImage(), S3Directory.GEAR, gearImageTO.getImageId());
-            } else if (gearImageTO.getImageId() != null && gearImageTO.getImage() == null) {
-                fileService.deleteFile(gearImageTO.getImageId());
+            switch (status) {
+                case CREATE:
+                    Image image = fileService.saveFile(gearImageTO.getImage(), S3Directory.GEAR);
+                    GearImage gearImage = GearImage.builder()
+                            .gear(gear)
+                            .image(image)
+                            .build();
+
+                    gearImageRepository.save(gearImage);
+                    break;
+                case UPDATE:
+
+                    fileService.updateFile(gearImageTO.getImage(), S3Directory.GEAR, gearImageTO.getImageId());
+                    break;
+                case DELETE:
+                    gearImageRepository.deleteByImageId(gearImageTO.getImageId());
+                    fileService.deleteFile(gearImageTO.getImageId());
+                    break;
             }
         }
-
     }
 
     @Override

@@ -3,6 +3,7 @@ package com.camtorage.db.friend.service;
 import com.camtorage.db.friend.repository.FriendRepository;
 import com.camtorage.db.user.repository.UserRepository;
 import com.camtorage.entity.friend.Friend;
+import com.camtorage.entity.user.UserSearch;
 import com.camtorage.entity.friend.FriendStatus;
 import com.camtorage.entity.friend.FriendVO;
 import com.camtorage.entity.user.User;
@@ -12,6 +13,7 @@ import com.camtorage.property.AwsS3Property;
 import com.camtorage.property.ServerProperty;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -157,6 +159,12 @@ public class FriendServiceImpl implements FriendService {
     @Override
     public long getCountFollowing(Integer userId) {
         return friendRepository.getCountFollowing(userId);
+    }
+
+    @Override
+    public List<FriendVO> searchFriend(UserSearch userSearch, Pageable pageable) {
+
+        return null;
     }
 
     public void addDomain(List<FriendVO> friendVOS) {

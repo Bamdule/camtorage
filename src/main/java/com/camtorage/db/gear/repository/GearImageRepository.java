@@ -9,5 +9,6 @@ public interface GearImageRepository extends JpaRepository<GearImage, Integer> {
 
     public List<GearImage> findAllByGearId(Integer gearId);
 
+    public void deleteByImageId(Integer imageId);
 //    public void deleteAllByGearId(Integer gearId);
 }

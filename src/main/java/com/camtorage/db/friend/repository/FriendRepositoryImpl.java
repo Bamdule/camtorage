@@ -1,12 +1,11 @@
 package com.camtorage.db.friend.repository;
 
-import com.camtorage.entity.friend.Friend;
-import com.camtorage.entity.friend.FriendStatus;
-import com.camtorage.entity.friend.FriendVO;
-import com.camtorage.entity.friend.QFriend;
+import com.camtorage.entity.friend.*;
+import com.camtorage.entity.user.UserSearch;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 
 import javax.persistence.EntityManager;
 import java.util.List;
@@ -117,4 +116,5 @@ public class FriendRepositoryImpl implements FriendRepositoryCustom {
                 .where(friend1.user.id.eq(userId))
                 .fetchCount();
     }
+
 }

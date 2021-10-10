@@ -100,13 +100,9 @@ public class FileServiceImpl implements FileService {
 
     @Override
     public void deleteFile(Integer imageId) {
-        Optional<Image> optionalImage = imageRepository.findById(imageId);
-
-        if (optionalImage.isEmpty()) {
+        Image image = imageRepository.findById(imageId).orElseThrow(() -> {
             throw new CustomException(ExceptionCode.IMAGE_ID_NOT_EXISTED);
-        }
-
-        Image image = optionalImage.get();
+        });
 
         s3Service.deleteFile(image.getPath());
         imageService.deleteImage(imageId);
