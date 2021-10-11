@@ -6,7 +6,7 @@ import com.camtorage.db.gear.service.GearService;
 import com.camtorage.db.user.service.UserService;
 import com.camtorage.exception.CustomException;
 import com.camtorage.exception.ExceptionCode;
-import com.camtorage.jwt.UserPayload;
+import com.camtorage.entity.user.UserPayload;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

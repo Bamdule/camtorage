@@ -30,7 +30,7 @@ public class UserRequest {
 
     private Boolean isPublic;
 
-    @JsonInclude(JsonInclude.Include.NON_EMPTY)
-    private String token;
+//    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+//    private String token;
 
 }

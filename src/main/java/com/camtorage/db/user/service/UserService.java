@@ -1,6 +1,10 @@
 package com.camtorage.db.user.service;
 
+import com.camtorage.domain.user.dto.UserResponse;
+import com.camtorage.domain.user.dto.search.UserSearchCondition;
+import com.camtorage.domain.user.dto.search.UserSearchResponse;
 import com.camtorage.entity.user.*;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface UserService {
@@ -22,4 +26,6 @@ public interface UserService {
     public UserWrapperVO getUserInfo(Integer id);
 
     public Boolean isPublic(Integer id);
+
+    public UserSearchResponse searchUser(UserSearchCondition userSearchCondition, Pageable pageable);
 }

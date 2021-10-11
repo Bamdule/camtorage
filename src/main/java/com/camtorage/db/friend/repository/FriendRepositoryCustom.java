@@ -1,10 +1,8 @@
 package com.camtorage.db.friend.repository;
 
 import com.camtorage.entity.friend.Friend;
-import com.camtorage.entity.user.UserSearch;
 import com.camtorage.entity.friend.FriendStatus;
 import com.camtorage.entity.friend.FriendVO;
-import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Optional;

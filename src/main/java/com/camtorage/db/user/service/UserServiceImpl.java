@@ -5,19 +5,23 @@ import com.camtorage.common.util.PathUtil;
 import com.camtorage.db.file.service.FileService;
 import com.camtorage.db.friend.service.FriendService;
 import com.camtorage.db.gear.service.GearService;
-import com.camtorage.db.user.repository.UserRepository;
+import com.camtorage.domain.user.dto.search.UserSearchCondition;
+import com.camtorage.entity.user.User;
+import com.camtorage.domain.user.repository.UserRepository;
+import com.camtorage.domain.user.dto.UserResponse;
+import com.camtorage.domain.user.dto.search.UserSearchResponse;
 import com.camtorage.entity.image.Image;
 import com.camtorage.entity.user.*;
 import com.camtorage.exception.CustomException;
 import com.camtorage.exception.ExceptionCode;
 import com.camtorage.jwt.UserJWT;
-import com.camtorage.jwt.UserPayload;
+import com.camtorage.entity.user.UserPayload;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
@@ -200,5 +204,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public Boolean isPublic(Integer id) {
         return userRepository.findUserByIdAndIsPublic(id, true).isPresent();
+    }
+
+    @Override
+    public UserSearchResponse searchUser(UserSearchCondition userSearchCondition, Pageable pageable) {
+        return userRepository.searchUser(userSearchCondition, pageable);
     }
 }

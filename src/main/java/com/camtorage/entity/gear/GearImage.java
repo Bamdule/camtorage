@@ -1,7 +1,6 @@
 package com.camtorage.entity.gear;
 
 import com.camtorage.entity.image.Image;
-import com.camtorage.entity.user.User;
 import lombok.*;
 
 import javax.persistence.*;

@@ -1,4 +1,4 @@
-package com.camtorage.jwt;
+package com.camtorage.entity.user;
 
 import com.camtorage.aop.LoginUser;
 import lombok.*;

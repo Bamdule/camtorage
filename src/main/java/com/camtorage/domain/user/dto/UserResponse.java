@@ -1,5 +1,6 @@
-package com.camtorage.entity.user;
+package com.camtorage.domain.user.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 
@@ -14,11 +15,11 @@ import javax.validation.constraints.NotBlank;
 public class UserResponse {
     private Integer id;
 
-    private String name;
+    private String name = "";
 
-    private String email;
+    private String email= "";
 
-    private String phone;
+    private String phone= "";
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Integer userImageId;
@@ -26,7 +27,7 @@ public class UserResponse {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String userImageUrl;
 
-    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @JsonIgnore
     private String userImagePath;
 
     private Boolean isPublic;

@@ -1,6 +1,5 @@
 package com.camtorage.entity.gear;
 
-import com.camtorage.entity.geartype.GearType;
 import com.camtorage.entity.user.User;
 import lombok.*;
 

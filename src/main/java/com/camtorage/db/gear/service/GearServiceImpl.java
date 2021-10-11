@@ -4,7 +4,7 @@ import com.camtorage.aws.S3Directory;
 import com.camtorage.db.file.service.FileService;
 import com.camtorage.db.gear.repository.GearImageRepository;
 import com.camtorage.db.gear.repository.GearRepository;
-import com.camtorage.db.user.repository.UserRepository;
+import com.camtorage.domain.user.repository.UserRepository;
 import com.camtorage.entity.gear.*;
 import com.camtorage.entity.image.FileStatus;
 import com.camtorage.entity.image.Image;

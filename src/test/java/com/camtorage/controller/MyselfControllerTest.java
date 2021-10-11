@@ -2,11 +2,9 @@ package com.camtorage.controller;
 
 import com.camtorage.db.gear.service.GearService;
 import com.camtorage.db.geartype.repository.GearTypeRepository;
-import com.camtorage.db.serverconfig.repository.ServerConfigRepository;
 import com.camtorage.db.user.service.UserService;
 import com.camtorage.entity.gear.GearRequest;
 import com.camtorage.entity.geartype.GearType;
-import com.camtorage.entity.serverconfig.ServerConfig;
 import com.camtorage.entity.user.UserRequest;
 import com.camtorage.entity.user.UserToken;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 

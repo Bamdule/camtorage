@@ -2,14 +2,17 @@ package com.camtorage.controller;
 
 import com.camtorage.aop.LoginUser;
 import com.camtorage.db.friend.service.FriendService;
+import com.camtorage.domain.user.dto.search.UserSearchCondition;
 import com.camtorage.db.user.service.UserService;
+import com.camtorage.domain.user.dto.search.UserSearchResponse;
 import com.camtorage.entity.user.UserRequest;
-import com.camtorage.entity.user.UserResponse;
+import com.camtorage.domain.user.dto.UserResponse;
 import com.camtorage.entity.user.UserWrapperVO;
-import com.camtorage.jwt.UserPayload;
+import com.camtorage.entity.user.UserPayload;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -44,7 +47,9 @@ public class UserController {
     }
 
     @GetMapping(value = "/{userId}")
-    public ResponseEntity searchUser(@LoginUser UserPayload userPayload, @PathVariable(value = "userId") Integer userId) {
+    public ResponseEntity getUser(
+            @LoginUser UserPayload userPayload,
+            @PathVariable(value = "userId") Integer userId) {
         UserWrapperVO userWrapperVO = userService.getUserInfo(userId);
 
         if (!(userWrapperVO.getUser().getIsPublic() || friendService.isFriend(userPayload.getUserId(), userId))) {
@@ -52,5 +57,15 @@ public class UserController {
         }
 
         return ResponseEntity.ok(userWrapperVO);
+    }
+
+    @GetMapping(value = "/search")
+    public ResponseEntity<UserSearchResponse> searchUser(
+            @LoginUser UserPayload userPayload,
+            UserSearchCondition userSearchCondition, Pageable pageable
+    ) {
+        UserSearchResponse userSearchResponse = userService.searchUser(userSearchCondition, pageable);
+
+        return ResponseEntity.ok(userSearchResponse);
     }
 }

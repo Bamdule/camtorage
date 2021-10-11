@@ -1,4 +1,4 @@
-package com.camtorage.db.user.repository;
+package com.camtorage.domain.user.repository;
 
 import com.camtorage.entity.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;

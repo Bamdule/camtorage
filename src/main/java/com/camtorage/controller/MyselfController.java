@@ -11,7 +11,7 @@ import com.camtorage.entity.gear.GearRequest;
 import com.camtorage.entity.gear.GearResponse;
 import com.camtorage.entity.user.UserUpdateTO;
 import com.camtorage.entity.user.UserWrapperVO;
-import com.camtorage.jwt.UserPayload;
+import com.camtorage.entity.user.UserPayload;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

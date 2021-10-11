@@ -1,9 +1,9 @@
 package com.camtorage.db.friend.service;
 
 import com.camtorage.db.friend.repository.FriendRepository;
-import com.camtorage.db.user.repository.UserRepository;
+import com.camtorage.domain.user.repository.UserRepository;
 import com.camtorage.entity.friend.Friend;
-import com.camtorage.entity.user.UserSearch;
+import com.camtorage.domain.user.dto.search.UserSearchCondition;
 import com.camtorage.entity.friend.FriendStatus;
 import com.camtorage.entity.friend.FriendVO;
 import com.camtorage.entity.user.User;
@@ -162,7 +162,7 @@ public class FriendServiceImpl implements FriendService {
     }
 
     @Override
-    public List<FriendVO> searchFriend(UserSearch userSearch, Pageable pageable) {
+    public List<FriendVO> searchFriend(UserSearchCondition userSearchCondition, Pageable pageable) {
 
         return null;
     }

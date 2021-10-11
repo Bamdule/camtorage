@@ -1,11 +1,9 @@
 package com.camtorage.db.friend.repository;
 
 import com.camtorage.entity.friend.*;
-import com.camtorage.entity.user.UserSearch;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
 
 import javax.persistence.EntityManager;
 import java.util.List;

@@ -1,5 +1,6 @@
 package com.camtorage.entity.user;
 
+import com.camtorage.domain.user.dto.UserResponse;
 import lombok.*;
 
 @Getter

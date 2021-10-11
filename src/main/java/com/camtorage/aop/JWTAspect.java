@@ -1,7 +1,7 @@
 package com.camtorage.aop;
 
 import com.camtorage.jwt.UserJWT;
-import com.camtorage.jwt.UserPayload;
+import com.camtorage.entity.user.UserPayload;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
