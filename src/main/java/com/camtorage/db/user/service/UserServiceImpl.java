@@ -75,22 +75,31 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public void updateUser(UserUpdateTO userUpdateTO) {
-        Optional<User> optionalUser = userRepository.findById(userUpdateTO.getId());
 
-        if (optionalUser.isEmpty()) {
-            throw new CustomException(ExceptionCode.USER_NOT_EXISTED);
-        }
-        User user = optionalUser.get();
+        User user = userRepository
+                .findById(userUpdateTO.getId())
+                .orElseThrow(() -> {
+                    throw new CustomException(ExceptionCode.USER_NOT_EXISTED);
+                });
+
 
         user.setName(userUpdateTO.getName());
         user.setPhone(userUpdateTO.getPhone());
-        user.setIsPublic(userUpdateTO.isPublic());
-
-        if (!userUpdateTO.getPassword().isBlank()) {
-            user.setPassword(passwordEncoder.encode(userUpdateTO.getPassword()));
-        }
+        user.setIsPublic(userUpdateTO.getIsPublic());
 
         userRepository.save(user);
+    }
+
+    @Override
+    @Transactional
+    public void updatePassword(Integer userId, String password) {
+        User user = userRepository
+                .findById(userId)
+                .orElseThrow(() -> {
+                    throw new CustomException(ExceptionCode.USER_NOT_EXISTED);
+                });
+
+        user.setPassword(passwordEncoder.encode(password));
     }
 
     @Override

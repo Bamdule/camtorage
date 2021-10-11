@@ -20,5 +20,5 @@ public class UserUpdateTO {
 
     private String phone;
 
-    private boolean isPublic;
+    private Boolean isPublic = true;
 }

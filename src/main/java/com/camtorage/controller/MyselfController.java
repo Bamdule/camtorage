@@ -63,6 +63,17 @@ public class MyselfController {
     }
 
     /*
+    내 정보 수정
+     */
+    @PutMapping(value = "/password", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    public ResponseEntity updateUserPassword(@LoginUser UserPayload userPayload, String password) {
+
+        userService.updatePassword(userPayload.getUserId(), password);
+
+        return ResponseEntity.noContent().build();
+    }
+
+    /*
     내 프로필 사진 등록
      */
     @PostMapping(value = "/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)

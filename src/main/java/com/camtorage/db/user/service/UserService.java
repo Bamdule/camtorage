@@ -9,6 +9,8 @@ public interface UserService {
 
     public void updateUser(UserUpdateTO userUpdateTO);
 
+    public void updatePassword(Integer userId, String password);
+
     public String updateUserImage(Integer userId, MultipartFile file);
 
     public void deleteUserImage(Integer userId);

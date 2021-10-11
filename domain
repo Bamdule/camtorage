@@ -1,0 +1,20 @@
+domain
+
+user
+* login
+* join
+* getUser
+* saveUser
+* updateUser
+
+friend
+
+gear
+
+board
+
+file
+
+myself
+
+
