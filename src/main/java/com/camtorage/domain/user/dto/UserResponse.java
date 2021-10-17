@@ -2,6 +2,7 @@ package com.camtorage.domain.user.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
+
 import lombok.*;
 
 import javax.validation.constraints.NotBlank;
@@ -17,15 +18,13 @@ public class UserResponse {
 
     private String name = "";
 
-    private String email= "";
+    private String email = "";
 
-    private String phone= "";
+    private String phone = "";
 
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private Integer userImageId;
+    private Integer userImageId = null;
 
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private String userImageUrl;
+    private String userImageUrl = "";
 
     @JsonIgnore
     private String userImagePath;
