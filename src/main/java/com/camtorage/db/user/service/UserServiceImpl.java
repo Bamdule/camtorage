@@ -16,6 +16,7 @@ import com.camtorage.exception.CustomException;
 import com.camtorage.exception.ExceptionCode;
 import com.camtorage.jwt.UserJWT;
 import com.camtorage.entity.user.UserPayload;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -56,17 +57,17 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponse saveUser(UserRequest userRequest) {
         userRepository
-                .findUserByEmail(userRequest.getEmail())
-                .ifPresent((user) -> {
-                    throw new CustomException(ExceptionCode.ALREADY_JOINED);
-                });
+            .findUserByEmail(userRequest.getEmail())
+            .ifPresent((user) -> {
+                throw new CustomException(ExceptionCode.ALREADY_JOINED);
+            });
 
         User user = User.builder()
-                .email(userRequest.getEmail())
-                .password(passwordEncoder.encode(userRequest.getPassword()))
-                .joinDt(LocalDateTime.now())
-                .isPublic(true)
-                .build();
+            .email(userRequest.getEmail())
+            .password(passwordEncoder.encode(userRequest.getPassword()))
+            .joinDt(LocalDateTime.now())
+            .isPublic(true)
+            .build();
 
         userRepository.save(user);
 
@@ -81,11 +82,10 @@ public class UserServiceImpl implements UserService {
     public void updateUser(UserUpdateTO userUpdateTO) {
 
         User user = userRepository
-                .findById(userUpdateTO.getId())
-                .orElseThrow(() -> {
-                    throw new CustomException(ExceptionCode.USER_NOT_EXISTED);
-                });
-
+            .findById(userUpdateTO.getId())
+            .orElseThrow(() -> {
+                throw new CustomException(ExceptionCode.USER_NOT_EXISTED);
+            });
 
         user.setName(userUpdateTO.getName());
         user.setPhone(userUpdateTO.getPhone());
@@ -98,10 +98,10 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public void updatePassword(Integer userId, String password) {
         User user = userRepository
-                .findById(userId)
-                .orElseThrow(() -> {
-                    throw new CustomException(ExceptionCode.USER_NOT_EXISTED);
-                });
+            .findById(userId)
+            .orElseThrow(() -> {
+                throw new CustomException(ExceptionCode.USER_NOT_EXISTED);
+            });
 
         user.setPassword(passwordEncoder.encode(password));
     }
@@ -163,26 +163,23 @@ public class UserServiceImpl implements UserService {
         }
 
         UserPayload userPayload = UserPayload.builder()
-                .userId(user.getId())
-                .build();
+            .userId(user.getId())
+            .build();
 
         String jwt = userJWT.createJWT(userPayload);
 
-
         return UserToken.builder()
-                .token(jwt)
-                .email(email)
-                .build();
+            .token(jwt)
+            .email(email)
+            .build();
     }
 
     @Override
     public UserResponse getUser(Integer id) {
 
         UserResponse user = userRepository
-                .getUserById(id)
-                .orElseThrow(() -> new CustomException(ExceptionCode.USER_NOT_EXISTED));
-
-        user.setUserImageUrl(pathUtil.getUrlWithDomain(user.getUserImagePath()));
+            .getUserById(id)
+            .orElseThrow(() -> new CustomException(ExceptionCode.USER_NOT_EXISTED));
 
         return user;
 
@@ -192,13 +189,12 @@ public class UserServiceImpl implements UserService {
     public UserWrapperVO getUserInfo(Integer id) {
 
         return UserWrapperVO.builder()
-                .user(this.getUser(id))
-                .followerCnt(friendService.getCountFollower(id))
-                .followingCnt(friendService.getCountFollowing(id))
-                .gearCnt(gearService.getCountGear(id))
-                .boardCnt(0)
-                .code("ok")
-                .build();
+            .user(this.getUser(id))
+            .followerCnt(friendService.getCountFollower(id))
+            .followingCnt(friendService.getCountFollowing(id))
+            .gearCnt(gearService.getCountGear(id))
+            .boardCnt(0)
+            .build();
     }
 
     @Override

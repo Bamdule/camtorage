@@ -11,7 +11,6 @@ import lombok.*;
 @ToString
 public class UserWrapperVO {
 
-    private String code = "ok";
     private UserResponse user;
 
     private long followerCnt = 0;

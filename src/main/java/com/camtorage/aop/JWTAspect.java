@@ -21,6 +21,10 @@ public class JWTAspect {
     @Autowired
     private UserJWT userJWT;
 
+    /**
+     * 메소드에 @UserJWTCheck 선언 시 아래 메소드를 거쳐감 
+     * @param jp
+     */
     @Before("@annotation(com.camtorage.aop.UserJWTCheck)")
     public void memberLoginCheck(JoinPoint jp) {
         System.out.println("[MYTEST] GOGO!!");

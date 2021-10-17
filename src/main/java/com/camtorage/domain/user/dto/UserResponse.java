@@ -26,8 +26,6 @@ public class UserResponse {
 
     private String userImageUrl = "";
 
-    @JsonIgnore
-    private String userImagePath;
-
     private Boolean isPublic;
+
 }

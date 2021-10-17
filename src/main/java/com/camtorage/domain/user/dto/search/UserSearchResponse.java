@@ -14,11 +14,11 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class UserSearchResponse {
-    public List<UserResponse> users = new ArrayList<>();
+    private List<UserResponse> users = new ArrayList<>();
 
-    public long total;
-    public int page;
-    public int size;
+    private long total;
+    private int page;
+    private int size;
 
 
 }
