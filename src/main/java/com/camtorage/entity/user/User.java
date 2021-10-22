@@ -1,9 +1,11 @@
 package com.camtorage.entity.user;
 
 import com.camtorage.entity.image.Image;
+
 import lombok.*;
 
 import javax.persistence.*;
+
 import java.time.LocalDateTime;
 
 @Entity
@@ -29,6 +31,10 @@ public class User {
     private String phone;
 
     private Boolean isPublic = true;
+
+    @Lob
+    @Column(name = "about_me")
+    private String aboutMe;
 
     @Column(name = "join_dt", updatable = false)
     private LocalDateTime joinDt;

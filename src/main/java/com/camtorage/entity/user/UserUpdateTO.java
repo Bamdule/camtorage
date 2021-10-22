@@ -1,6 +1,7 @@
 package com.camtorage.entity.user;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+
 import lombok.*;
 
 import javax.validation.constraints.NotBlank;
@@ -19,6 +20,8 @@ public class UserUpdateTO {
     private String name;
 
     private String phone;
+
+    private String aboutMe;
 
     private Boolean isPublic = true;
 }

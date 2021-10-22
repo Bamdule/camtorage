@@ -9,6 +9,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 public interface UserService {
 
+    public boolean isExistEmail(String email);
+
     public UserResponse saveUser(UserRequest userRequest);
 
     public void updateUser(UserUpdateTO userUpdateTO);

@@ -28,4 +28,6 @@ public class UserResponse {
 
     private Boolean isPublic;
 
+    private String aboutMe = "";
+
 }

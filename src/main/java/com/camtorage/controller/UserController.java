@@ -32,6 +32,11 @@ public class UserController {
     @Autowired
     private FriendService friendService;
 
+    @GetMapping("/existEmail")
+    public ResponseEntity isExistEmail(String email) {
+        return ResponseEntity.ok(userService.isExistEmail(email));
+    }
+
     /**
      * 회원 가입
      * @param user

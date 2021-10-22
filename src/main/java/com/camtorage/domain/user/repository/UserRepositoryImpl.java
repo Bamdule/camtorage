@@ -41,6 +41,7 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
                 user.name,
                 user.email,
                 user.phone,
+                user.aboutMe,
                 user.isPublic.as("isPublic"),
                 user.image.id.as("userImageId"),
                 user.image.path.prepend(s3domain).as("userImageUrl")

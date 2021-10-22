@@ -23,6 +23,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
@@ -53,6 +54,11 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserJWT userJWT;
+
+    @Override
+    public boolean isExistEmail(String email) {
+        return userRepository.findUserByEmail(email).isPresent();
+    }
 
     @Override
     public UserResponse saveUser(UserRequest userRequest) {
@@ -89,6 +95,7 @@ public class UserServiceImpl implements UserService {
 
         user.setName(userUpdateTO.getName());
         user.setPhone(userUpdateTO.getPhone());
+        user.setAboutMe(userUpdateTO.getAboutMe());
         user.setIsPublic(userUpdateTO.getIsPublic());
 
         userRepository.save(user);
@@ -204,6 +211,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserSearchResponse searchUser(UserSearchCondition userSearchCondition, Pageable pageable) {
-        return userRepository.searchUser(userSearchCondition, pageable);
+
+        if (StringUtils.hasText(userSearchCondition.getSearchText())) {
+            return userRepository.searchUser(userSearchCondition, pageable);
+        }
+        return new UserSearchResponse();
+
     }
 }
