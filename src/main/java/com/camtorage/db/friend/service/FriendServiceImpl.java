@@ -127,14 +127,12 @@ public class FriendServiceImpl implements FriendService {
     @Override
     public List<FriendVO> getListFollower(Integer userId) {
         List<FriendVO> friendVOS = friendRepository.getListFollower(userId);
-        addDomain(friendVOS);
         return friendVOS;
     }
 
     @Override
     public List<FriendVO> getListFollowing(Integer userId) {
         List<FriendVO> friendVOS = friendRepository.getListFollowing(userId);
-        addDomain(friendVOS);
         return friendVOS;
     }
 

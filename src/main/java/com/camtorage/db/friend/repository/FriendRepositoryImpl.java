@@ -2,6 +2,8 @@ package com.camtorage.db.friend.repository;
 
 import com.camtorage.entity.friend.*;
 import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.CaseBuilder;
+import com.querydsl.core.types.dsl.StringExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,11 +14,14 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.camtorage.entity.friend.QFriend.friend1;
+import static com.camtorage.entity.user.QUser.*;
 
 public class FriendRepositoryImpl implements FriendRepositoryCustom {
 
     @Autowired
     private EntityManager em;
+
+    private String s3domain = "https://camtorage.s3.ap-northeast-2.amazonaws.com/";
 
     @Override
     public Optional<Friend> findFriendByUserIdAndFriendId(Integer userId, Integer friendId) {
@@ -56,6 +61,11 @@ public class FriendRepositoryImpl implements FriendRepositoryCustom {
     public List<FriendVO> getListFollower(Integer userId) {
         JPAQueryFactory query = new JPAQueryFactory(em);
 
+        StringExpression userImageUrl = new CaseBuilder()
+            .when(friend1.user.image.id.isNotNull())
+            .then(friend1.user.image.path.prepend(s3domain))
+            .otherwise("");
+
         return query.select(
                 Projections.bean(
                     FriendVO.class,
@@ -64,7 +74,7 @@ public class FriendRepositoryImpl implements FriendRepositoryCustom {
                     friend1.user.id.as("friendId"),
                     friend1.user.name.as("name"),
                     friend1.user.email.as("email"),
-                    friend1.user.image.path.as("profilePath")
+                    userImageUrl.as("profileUrl")
                 ))
             .from(friend1)
             .join(friend1.user)
@@ -80,6 +90,10 @@ public class FriendRepositoryImpl implements FriendRepositoryCustom {
     @Override
     public List<FriendVO> getListFollowing(Integer userId) {
         JPAQueryFactory query = new JPAQueryFactory(em);
+        StringExpression userImageUrl = new CaseBuilder()
+            .when(friend1.friend.image.id.isNotNull())
+            .then(friend1.friend.image.path.prepend(s3domain))
+            .otherwise("");
 
         return query.select(
                 Projections.bean(
@@ -89,7 +103,7 @@ public class FriendRepositoryImpl implements FriendRepositoryCustom {
                     friend1.friend.id.as("friendId"),
                     friend1.friend.name.as("name"),
                     friend1.friend.email.as("email"),
-                    friend1.friend.image.path.as("profilePath")
+                    userImageUrl.as("profileUrl")
                 ))
             .from(friend1)
             .join(friend1.friend)

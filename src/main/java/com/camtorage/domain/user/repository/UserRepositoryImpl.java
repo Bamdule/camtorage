@@ -6,6 +6,8 @@ import com.camtorage.domain.user.dto.search.UserSearchResponse;
 import com.camtorage.property.ServerProperty;
 import com.querydsl.core.QueryResults;
 import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.CaseBuilder;
+import com.querydsl.core.types.dsl.StringExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,6 +76,11 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
 
         String searchQuery = userSearchCondition.getSearchText().concat("%");
 
+        StringExpression userImageUrl = new CaseBuilder()
+            .when(user.image.id.isNotNull())
+            .then(user.image.path.prepend(s3domain))
+            .otherwise("");
+
         List<UserResponse> userResponses = query
             .select(Projections.bean(
                 UserResponse.class,
@@ -83,7 +90,7 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
                 user.phone,
                 user.isPublic.as("isPublic"),
                 user.image.id.as("userImageId"),
-                user.image.path.prepend(s3domain).as("userImageUrl")
+                userImageUrl.as("userImageUrl")
             ))
             .from(user)
             .leftJoin(user.image)
