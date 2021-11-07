@@ -4,6 +4,7 @@ import com.camtorage.domain.user.dto.UserResponse;
 import com.camtorage.domain.user.dto.search.UserSearchCondition;
 import com.camtorage.domain.user.dto.search.UserSearchResponse;
 import com.camtorage.entity.user.*;
+
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -26,6 +27,8 @@ public interface UserService {
     public UserResponse getUser(Integer id);
 
     public UserWrapperVO getUserInfo(Integer id);
+
+    public UserWrapperVO getOtherUserInfo(Integer myUserId, Integer otherUserId);
 
     public Boolean isPublic(Integer id);
 

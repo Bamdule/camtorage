@@ -66,18 +66,14 @@ public class UserController {
     /**
      * ID로 유저 조회
      * @param userPayload
-     * @param userId
+     * @param otherUserId
      * @return
      */
-    @GetMapping(value = "/{userId}")
+    @GetMapping(value = "/{otherUserId}")
     public ResponseEntity getUser(
         @LoginUser UserPayload userPayload,
-        @PathVariable(value = "userId") Integer userId) {
-        UserWrapperVO userWrapperVO = userService.getUserInfo(userId);
-
-        // if (!(userWrapperVO.getUser().getIsPublic() || friendService.isFriend(userPayload.getUserId(), userId))) {
-        //     throw new CustomException()
-        // }
+        @PathVariable(value = "otherUserId") Integer otherUserId) {
+        UserWrapperVO userWrapperVO = userService.getOtherUserInfo(userPayload.getUserId(), otherUserId);
 
         return ResponseEntity.ok(userWrapperVO);
     }

@@ -6,6 +6,7 @@ import com.camtorage.db.file.service.FileService;
 import com.camtorage.db.friend.service.FriendService;
 import com.camtorage.db.gear.service.GearService;
 import com.camtorage.domain.user.dto.search.UserSearchCondition;
+import com.camtorage.entity.friend.FriendRelationship;
 import com.camtorage.entity.user.User;
 import com.camtorage.domain.user.repository.UserRepository;
 import com.camtorage.domain.user.dto.UserResponse;
@@ -202,6 +203,13 @@ public class UserServiceImpl implements UserService {
             .gearCnt(gearService.getCountGear(id))
             .boardCnt(0)
             .build();
+    }
+
+    @Override
+    public UserWrapperVO getOtherUserInfo(Integer myUserId, Integer otherUserId) {
+        UserWrapperVO userInfo = this.getUserInfo(myUserId);
+        userInfo.setStatus(friendService.getFriendRelationship(myUserId, otherUserId));
+        return userInfo;
     }
 
     @Override

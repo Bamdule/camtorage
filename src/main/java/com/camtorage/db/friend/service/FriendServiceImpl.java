@@ -4,6 +4,7 @@ import com.camtorage.db.friend.repository.FriendRepository;
 import com.camtorage.domain.user.repository.UserRepository;
 import com.camtorage.entity.friend.Friend;
 import com.camtorage.domain.user.dto.search.UserSearchCondition;
+import com.camtorage.entity.friend.FriendRelationship;
 import com.camtorage.entity.friend.FriendStatus;
 import com.camtorage.entity.friend.FriendVO;
 import com.camtorage.entity.user.User;
@@ -11,6 +12,7 @@ import com.camtorage.exception.CustomException;
 import com.camtorage.exception.ExceptionCode;
 import com.camtorage.property.AwsS3Property;
 import com.camtorage.property.ServerProperty;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Pageable;
@@ -35,8 +37,8 @@ public class FriendServiceImpl implements FriendService {
     public void requestFriend(Integer userId, Integer friendId) {
 
         Optional<Friend> friendOptional = friendRepository.findFriendByUserIdAndFriendId(
-                userId,
-                friendId
+            userId,
+            friendId
         );
 
         if (friendOptional.isPresent()) {
@@ -63,42 +65,39 @@ public class FriendServiceImpl implements FriendService {
         User friendUser = optionalFriend.get();
 
         Friend friend = Friend.builder()
-                .user(user)
-                .friend(friendUser)
-                .status(FriendStatus.REQUEST)
-                .build();
+            .user(user)
+            .friend(friendUser)
+            .status(FriendStatus.REQUEST)
+            .build();
 
         friendRepository.save(friend);
     }
 
     @Override
     public void acceptFriend(Integer userId, Integer friendId) {
-        Optional<Friend> friendOptional = friendRepository.findFriendByUserIdAndFriendIdAndStatus(
-                friendId,
-                userId,
-                FriendStatus.REQUEST
-        );
-
-        if (friendOptional.isEmpty()) {
+        Friend friend = friendRepository.findFriendByUserIdAndFriendIdAndStatus(
+            friendId,
+            userId,
+            FriendStatus.REQUEST
+        ).orElseThrow(() -> {
             throw new CustomException(ExceptionCode.FRIEND_NOT_EXISTED);
-        }
-        Friend friend = friendOptional.get();
+        });
 
         friend.setStatus(FriendStatus.FRIEND);
         friendRepository.save(friend);
 
         try {
             Friend user = Friend.builder()
-                    .user(friend.getFriend())
-                    .friend(friend.getUser())
-                    .status(FriendStatus.FRIEND)
-                    .build();
+                .user(friend.getFriend())
+                .friend(friend.getUser())
+                .status(FriendStatus.FRIEND)
+                .build();
 
             friendRepository.save(user);
         } catch (DataIntegrityViolationException dataIntegrityViolationException) {
             Optional<Friend> userOptional = friendRepository.findFriendByUserIdAndFriendId(
-                    userId,
-                    friendId
+                userId,
+                friendId
             );
             Friend user = userOptional.get();
             user.setStatus(FriendStatus.FRIEND);
@@ -112,9 +111,9 @@ public class FriendServiceImpl implements FriendService {
         friendRepository.deleteFriendByUserIdAndFriendId(userId, friendId);
 
         Optional<Friend> friendOptional = friendRepository.findFriendByUserIdAndFriendIdAndStatus(
-                friendId,
-                userId,
-                FriendStatus.FRIEND
+            friendId,
+            userId,
+            FriendStatus.FRIEND
         );
 
         if (friendOptional.isPresent()) {
@@ -165,13 +164,26 @@ public class FriendServiceImpl implements FriendService {
         return null;
     }
 
-    public void addDomain(List<FriendVO> friendVOS) {
-        AwsS3Property awsS3Property = serverProperty.getAwsS3Property();
-        friendVOS.forEach(friendVO -> {
-            if (friendVO.getProfilePath() != null) {
-                friendVO.setProfileUrl(awsS3Property.getDomain() + friendVO.getProfilePath());
+    @Override
+    public FriendRelationship getFriendRelationship(Integer myUserId, Integer otherUserId) {
+        Optional<Friend> my = friendRepository.findFriendByUserIdAndFriendId(myUserId, otherUserId);
+
+        if (my.isPresent()) {
+            Friend friend = my.get();
+            if (friend.getStatus().equals(FriendStatus.FRIEND)) {
+                return FriendRelationship.FRIEND;
+            } else {
+                return FriendRelationship.FOLLOWING;
             }
-        });
+        }
+
+        Optional<Friend> other = friendRepository.findFriendByUserIdAndFriendId(otherUserId, myUserId);
+
+        if (other.isPresent()) {
+            return FriendRelationship.FOLLOWER;
+        }
+
+        return FriendRelationship.NONE;
     }
 
 }

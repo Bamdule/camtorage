@@ -1,6 +1,10 @@
 package com.camtorage.entity.user;
 
 import com.camtorage.domain.user.dto.UserResponse;
+import com.camtorage.entity.friend.FriendRelationship;
+import com.camtorage.entity.friend.FriendStatus;
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import lombok.*;
 
 @Getter
@@ -18,5 +22,7 @@ public class UserWrapperVO {
     private long gearCnt = 0;
     private long boardCnt = 0;
 
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private FriendRelationship status = null;
 
 }

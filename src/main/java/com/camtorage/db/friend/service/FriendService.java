@@ -1,7 +1,9 @@
 package com.camtorage.db.friend.service;
 
 import com.camtorage.domain.user.dto.search.UserSearchCondition;
+import com.camtorage.entity.friend.FriendRelationship;
 import com.camtorage.entity.friend.FriendVO;
+
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
@@ -26,5 +28,6 @@ public interface FriendService {
 
     public List<FriendVO> searchFriend(UserSearchCondition userSearchCondition, Pageable pageable);
 
+    public FriendRelationship getFriendRelationship(Integer myUserId, Integer otherUserId);
 
 }
