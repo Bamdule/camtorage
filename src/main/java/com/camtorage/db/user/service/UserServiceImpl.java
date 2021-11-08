@@ -207,7 +207,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserWrapperVO getOtherUserInfo(Integer myUserId, Integer otherUserId) {
-        UserWrapperVO userInfo = this.getUserInfo(myUserId);
+        UserWrapperVO userInfo = this.getUserInfo(otherUserId);
         userInfo.setStatus(friendService.getFriendRelationship(myUserId, otherUserId));
         return userInfo;
     }
