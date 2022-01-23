@@ -5,6 +5,7 @@ import lombok.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+
 import java.util.List;
 
 @Getter
@@ -13,8 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class GearRequest {
-//    private Integer id;
-
+    //    private Integer id;
 
     @NotBlank(message = "장비 명은 필수 값입니다.")
     private String name;
@@ -33,5 +33,7 @@ public class GearRequest {
     private Integer price = 0;
     @NotEmpty
     private String buyDt;
+
+    private String description = "";
 
 }

@@ -30,4 +30,5 @@ public interface FriendService {
 
     public FriendRelationship getFriendRelationship(Integer myUserId, Integer otherUserId);
 
+    void deleteAll(Integer userId);
 }

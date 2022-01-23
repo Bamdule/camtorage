@@ -12,6 +12,7 @@ import com.camtorage.entity.gear.GearResponse;
 import com.camtorage.entity.user.UserUpdateTO;
 import com.camtorage.entity.user.UserWrapperVO;
 import com.camtorage.entity.user.UserPayload;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+
 import java.util.List;
 
 @RestController
@@ -28,7 +30,6 @@ import java.util.List;
 public class MyselfController {
 
     Logger logger = LoggerFactory.getLogger(this.getClass());
-
 
     @Autowired
     private UserService userService;
@@ -38,7 +39,6 @@ public class MyselfController {
 
     @Autowired
     private FriendService friendService;
-
 
     /*
     내 정보 조회
@@ -95,7 +95,8 @@ public class MyselfController {
     내 장비 등록
      */
     @PostMapping(value = "/gear", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity saveGear(@LoginUser UserPayload userPayload, @Valid GearRequest gear, List<MultipartFile> gearImages) {
+    public ResponseEntity saveGear(@LoginUser UserPayload userPayload, @Valid GearRequest gear,
+        List<MultipartFile> gearImages) {
 
         GearResponse gearResponse = gearService.saveGear(userPayload.getUserId(), gear, gearImages);
 
@@ -107,10 +108,10 @@ public class MyselfController {
      */
     @PutMapping(value = "/gear/{gearId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity updateGear(
-            @LoginUser UserPayload userPayload,
-            @PathVariable(value = "gearId") Integer gearId,
-            GearRequest gear,
-            @ModelAttribute(value = "gearImages") GearImageWrap gearImageWrap
+        @LoginUser UserPayload userPayload,
+        @PathVariable(value = "gearId") Integer gearId,
+        GearRequest gear,
+        @ModelAttribute(value = "gearImages") GearImageWrap gearImageWrap
     ) {
         gearService.updateGear(userPayload.getUserId(), gearId, gear, gearImageWrap.getGearImages());
 
@@ -121,7 +122,8 @@ public class MyselfController {
     내 장비 삭제
      */
     @DeleteMapping(value = "/gear/{gearId}")
-    public ResponseEntity deleteGear(@LoginUser UserPayload userPayload, @PathVariable(value = "gearId") Integer gearId) {
+    public ResponseEntity deleteGear(@LoginUser UserPayload userPayload,
+        @PathVariable(value = "gearId") Integer gearId) {
         gearService.deleteGear(gearId);
         return ResponseEntity.noContent().build();
     }
@@ -138,22 +140,22 @@ public class MyselfController {
     내 장비 이미지 조회
     */
     @GetMapping(value = "/gear/images/{gearId}")
-    public ResponseEntity getListGearImage(@LoginUser UserPayload userPayload, @PathVariable(value = "gearId") Integer gearId) {
+    public ResponseEntity getListGearImage(@LoginUser UserPayload userPayload,
+        @PathVariable(value = "gearId") Integer gearId) {
         return ResponseEntity.ok(gearService.getListGearImage(userPayload.getUserId(), gearId));
     }
-
 
     /*
     친구 요청
      */
     @PostMapping(value = "/friend/{friendId}", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     public ResponseEntity requestFriend(
-            @LoginUser UserPayload userPayload,
-            @PathVariable Integer friendId
+        @LoginUser UserPayload userPayload,
+        @PathVariable Integer friendId
     ) {
         friendService.requestFriend(
-                userPayload.getUserId(),
-                friendId
+            userPayload.getUserId(),
+            friendId
         );
 
         return ResponseEntity.noContent().build();
@@ -164,12 +166,12 @@ public class MyselfController {
      */
     @PutMapping(value = "/friend/{friendId}", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     public ResponseEntity acceptFriend(
-            @LoginUser UserPayload userPayload,
-            @PathVariable Integer friendId
+        @LoginUser UserPayload userPayload,
+        @PathVariable Integer friendId
     ) {
         friendService.acceptFriend(
-                userPayload.getUserId(),
-                friendId
+            userPayload.getUserId(),
+            friendId
         );
 
         return ResponseEntity.noContent().build();
@@ -180,12 +182,12 @@ public class MyselfController {
      */
     @DeleteMapping(value = "/friend/{friendId}")
     public ResponseEntity deleteFriend(
-            @LoginUser UserPayload userPayload,
-            @PathVariable Integer friendId
+        @LoginUser UserPayload userPayload,
+        @PathVariable Integer friendId
     ) {
         friendService.deleteFriend(
-                userPayload.getUserId(),
-                friendId
+            userPayload.getUserId(),
+            friendId
         );
         return ResponseEntity.noContent().build();
     }
@@ -195,14 +197,14 @@ public class MyselfController {
      */
     @GetMapping(value = "/friend/follower")
     public ResponseEntity getListFollower(
-            @LoginUser UserPayload userPayload) {
+        @LoginUser UserPayload userPayload) {
         List<FriendVO> friends = friendService.getListFollower(userPayload.getUserId());
 
         return ResponseEntity.ok(
-                FriendWrapper.builder()
-                        .description("follower")
-                        .friends(friends)
-                        .build()
+            FriendWrapper.builder()
+                .description("follower")
+                .friends(friends)
+                .build()
         );
     }
 
@@ -211,17 +213,31 @@ public class MyselfController {
      */
     @GetMapping(value = "/friend/following")
     public ResponseEntity getListFollowing(
-            @LoginUser UserPayload userPayload) {
+        @LoginUser UserPayload userPayload) {
         List<FriendVO> friends = friendService.getListFollowing(userPayload.getUserId());
 
         return ResponseEntity.ok(
-                FriendWrapper.builder()
-                        .description("following")
-                        .friends(friends)
-                        .build()
+            FriendWrapper.builder()
+                .description("following")
+                .friends(friends)
+                .build()
         );
     }
 
-//    @GetMapping(value = "/friend/search")
-//    public ResponseEntity searchFriend
+    /*
+    친구 삭제
+     */
+    @DeleteMapping
+    public ResponseEntity deleteUser(
+        @LoginUser UserPayload userPayload
+    ) {
+        userService.deleteUserById(
+            userPayload.getUserId()
+        );
+
+        return ResponseEntity.noContent().build();
+    }
+
+    //    @GetMapping(value = "/friend/search")
+    //    public ResponseEntity searchFriend
 }

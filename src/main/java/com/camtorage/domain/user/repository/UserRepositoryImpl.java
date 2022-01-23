@@ -3,6 +3,10 @@ package com.camtorage.domain.user.repository;
 import com.camtorage.domain.user.dto.UserResponse;
 import com.camtorage.domain.user.dto.search.UserSearchCondition;
 import com.camtorage.domain.user.dto.search.UserSearchResponse;
+import com.camtorage.entity.friend.Friend;
+import com.camtorage.entity.friend.QFriend;
+import com.camtorage.entity.gear.QGear;
+import com.camtorage.entity.gear.QGearImage;
 import com.camtorage.property.ServerProperty;
 import com.querydsl.core.QueryResults;
 import com.querydsl.core.types.Projections;
@@ -19,6 +23,9 @@ import javax.persistence.EntityManager;
 import java.util.List;
 import java.util.Optional;
 
+import static com.camtorage.entity.friend.QFriend.*;
+import static com.camtorage.entity.gear.QGear.*;
+import static com.camtorage.entity.gear.QGearImage.*;
 import static com.camtorage.entity.user.QUser.user;
 
 public class UserRepositoryImpl implements UserRepositoryCustom {
@@ -50,7 +57,10 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
             ))
             .from(user)
             .leftJoin(user.image)
-            .where(user.id.eq(id))
+            .where(
+                user.id.eq(id),
+                user.isDelete.isFalse()
+            )
             .fetchOne())
             ;
 
@@ -63,7 +73,8 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
 
         return query.selectFrom(user)
             .where(
-                user.name.like(searchQuery).or(user.email.like(searchQuery))
+                user.name.like(searchQuery).or(user.email.like(searchQuery)),
+                user.isDelete.isFalse()
             )
             .fetchCount();
     }
@@ -95,7 +106,8 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
             .from(user)
             .leftJoin(user.image)
             .where(
-                user.name.like(searchQuery).or(user.email.like(searchQuery))
+                user.name.like(searchQuery).or(user.email.like(searchQuery)),
+                user.isDelete.isFalse()
             )
             .offset(pageable.getOffset())
             .limit(pageable.getPageSize())

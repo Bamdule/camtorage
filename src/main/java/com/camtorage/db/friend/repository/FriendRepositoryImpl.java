@@ -134,4 +134,13 @@ public class FriendRepositoryImpl implements FriendRepositoryCustom {
             .fetchCount();
     }
 
+    @Override
+    public void deleteAll(Integer id) {
+        JPAQueryFactory query = new JPAQueryFactory(em);
+
+        query.delete(friend1)
+            .where(friend1.friend.id.eq(id).or(friend1.user.id.eq(id)))
+            .execute();
+    }
+
 }

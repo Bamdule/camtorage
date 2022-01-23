@@ -52,6 +52,7 @@ public class GearRepositoryImpl implements GearRepositoryCustom {
                 gear.name,
                 gear.price.coalesce(0).as("price"),
                 gear.buyDt,
+                gear.description,
                 gear.createDt,
                 gear.updateDt,
                 gearType.id.as("gearTypeId"),

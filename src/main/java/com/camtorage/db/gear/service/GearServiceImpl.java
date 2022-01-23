@@ -13,6 +13,7 @@ import com.camtorage.exception.CustomException;
 import com.camtorage.exception.ExceptionCode;
 import com.camtorage.property.AwsS3Property;
 import com.camtorage.property.ServerProperty;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -43,13 +44,12 @@ public class GearServiceImpl implements GearService {
     @Autowired
     private ModelMapper modelMapper;
 
-
     @Transactional
     @Override
     public GearResponse saveGear(Integer userId, GearRequest gearRequest, List<MultipartFile> files) {
         User user = userRepository
-                .findById(userId)
-                .orElseThrow(() -> new CustomException(ExceptionCode.USER_NOT_EXISTED));
+            .findById(userId)
+            .orElseThrow(() -> new CustomException(ExceptionCode.USER_NOT_EXISTED));
 
         Gear gear = modelMapper.map(gearRequest, Gear.class);
         gear.setUser(user);
@@ -63,9 +63,9 @@ public class GearServiceImpl implements GearService {
         for (Image image : images) {
 
             GearImage gearImage = GearImage.builder()
-                    .gear(gear)
-                    .image(image)
-                    .build();
+                .gear(gear)
+                .image(image)
+                .build();
 
             gearImageRepository.save(gearImage);
         }
@@ -77,10 +77,9 @@ public class GearServiceImpl implements GearService {
     @Override
     public void updateGear(Integer userId, Integer gearId, GearRequest gearRequest, List<GearImageTO> gearImages) {
 
-
         Gear gear = gearRepository
-                .findById(gearId)
-                .orElseThrow(() -> new CustomException(ExceptionCode.GEAR_NOT_EXISTED));
+            .findById(gearId)
+            .orElseThrow(() -> new CustomException(ExceptionCode.GEAR_NOT_EXISTED));
 
         gear.setGearTypeId(gearRequest.getGearTypeId());
         gear.setCapacity(gearRequest.getCapacity());
@@ -89,19 +88,19 @@ public class GearServiceImpl implements GearService {
         gear.setName(gearRequest.getName());
         gear.setPrice(gearRequest.getPrice());
         gear.setBuyDt(gearRequest.getBuyDt());
+        gear.setDescription(gearRequest.getDescription());
         gear.setUpdateDt(LocalDateTime.now());
 
         for (GearImageTO gearImageTO : gearImages) {
-
             FileStatus status = FileStatus.get(gearImageTO.getImageId(), gearImageTO.getImage());
 
             switch (status) {
                 case CREATE:
                     Image image = fileService.saveFile(gearImageTO.getImage(), S3Directory.GEAR);
                     GearImage gearImage = GearImage.builder()
-                            .gear(gear)
-                            .image(image)
-                            .build();
+                        .gear(gear)
+                        .image(image)
+                        .build();
 
                     gearImageRepository.save(gearImage);
                     break;
@@ -154,9 +153,9 @@ public class GearServiceImpl implements GearService {
         gearImages.forEach(gearImage -> {
             if (gearImage.getUrl() != null) {
                 gearImage.setUrl(new StringBuilder()
-                        .append(awsS3Property.getDomain())
-                        .append(gearImage.getUrl())
-                        .toString()
+                    .append(awsS3Property.getDomain())
+                    .append(gearImage.getUrl())
+                    .toString()
                 );
             }
 

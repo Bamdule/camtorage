@@ -32,6 +32,9 @@ public class User {
 
     private Boolean isPublic = true;
 
+    @Column(nullable = false)
+    private Boolean isDelete = false;
+
     @Lob
     @Column(name = "about_me")
     private String aboutMe;

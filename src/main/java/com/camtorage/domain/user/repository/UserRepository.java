@@ -1,6 +1,7 @@
 package com.camtorage.domain.user.repository;
 
 import com.camtorage.entity.user.User;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

@@ -74,6 +74,7 @@ public class UserServiceImpl implements UserService {
             .password(passwordEncoder.encode(userRequest.getPassword()))
             .joinDt(LocalDateTime.now())
             .isPublic(true)
+            .isDelete(false)
             .build();
 
         userRepository.save(user);
@@ -159,12 +160,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserToken loginUser(String email, String password) {
-        Optional<User> optionalUser = userRepository.findUserByEmail(email);
-        if (optionalUser.isEmpty()) {
-            throw new CustomException(ExceptionCode.LOGIN_FAILED);
-        }
+        User user = userRepository.findUserByEmail(email)
+            .orElseThrow(() -> {
+                throw new CustomException(ExceptionCode.LOGIN_FAILED);
+            });
 
-        User user = optionalUser.get();
+        if (user.getIsDelete()) {
+            throw new CustomException(ExceptionCode.USER_DELETED);
+        }
 
         if (!passwordEncoder.matches(password, user.getPassword())) {
             throw new CustomException(ExceptionCode.LOGIN_FAILED);
@@ -225,5 +228,17 @@ public class UserServiceImpl implements UserService {
         }
         return new UserSearchResponse();
 
+    }
+
+    @Override
+    @Transactional
+    public void deleteUserById(Integer id) {
+        userRepository.findById(id)
+            .orElseThrow(() -> {
+                throw new CustomException(ExceptionCode.USER_NOT_EXISTED);
+            })
+            .setIsDelete(true);
+
+        friendService.deleteAll(id);
     }
 }

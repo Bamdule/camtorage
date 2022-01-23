@@ -1,9 +1,11 @@
 package com.camtorage.entity.gear;
 
 import com.camtorage.entity.user.User;
+
 import lombok.*;
 
 import javax.persistence.*;
+
 import java.time.LocalDateTime;
 
 @Entity
@@ -28,6 +30,8 @@ public class Gear {
     private Integer price = 0;
 
     private String buyDt;
+
+    private String description;
 
     @Column(name = "create_dt", nullable = true)
     private LocalDateTime createDt;

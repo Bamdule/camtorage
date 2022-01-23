@@ -186,4 +186,9 @@ public class FriendServiceImpl implements FriendService {
         return FriendRelationship.NONE;
     }
 
+    @Override
+    public void deleteAll(Integer userId) {
+        friendRepository.deleteAll(userId);
+    }
+
 }

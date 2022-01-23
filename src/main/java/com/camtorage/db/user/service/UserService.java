@@ -33,4 +33,6 @@ public interface UserService {
     public Boolean isPublic(Integer id);
 
     public UserSearchResponse searchUser(UserSearchCondition userSearchCondition, Pageable pageable);
+
+    public void deleteUserById(Integer id);
 }

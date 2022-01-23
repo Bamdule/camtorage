@@ -22,5 +22,7 @@ public interface FriendRepositoryCustom {
 
 //    public List<FriendVO> searchFriend(UserSearch userSearch, Pageable pageable);
 
+    void deleteAll(Integer id);
+
 
 }

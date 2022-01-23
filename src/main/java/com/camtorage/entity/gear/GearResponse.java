@@ -1,6 +1,7 @@
 package com.camtorage.entity.gear;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -32,6 +33,7 @@ public class GearResponse {
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String buyDt;
+    private String description;
 
     private LocalDateTime createDt;
 
