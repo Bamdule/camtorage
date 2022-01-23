@@ -33,14 +33,6 @@ public class UserController {
     @Autowired
     private FriendService friendService;
 
-    // private Map<String,Object>
-
-    // @PostMapping("/send-auth-code")
-    // public ResponseEntity<Void> sendAuthCodeToEmail(String email) {
-    //     String code = RandomStringUtils.randomAlphanumeric(8);
-    //
-    //     return ResponseEntity.noContent().build();
-    // }
 
     @GetMapping("/existEmail")
     public ResponseEntity isExistEmail(String email) {
