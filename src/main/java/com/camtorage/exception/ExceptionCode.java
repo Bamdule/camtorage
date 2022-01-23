@@ -28,6 +28,11 @@ public enum ExceptionCode {
 
     AWS_S3_UPLOAD_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "AWS_S3_UPLOAD_ERROR", "AWS S3 이미지 파일 업로드 에러"),
 
+    EMAIL_CERTIFICATION_NOT_FOUND(HttpStatus.BAD_REQUEST, "EMAIL_CERTIFICATION_NOT_FOUND", "이메일 인증 코드를 찾을 수 없습니다."),
+    EMAIL_CERTIFICATION_EXPIRED(HttpStatus.BAD_REQUEST, "EMAIL_CERTIFICATION_EXPIRED", "이메일 인증 코드가 만료되었습니다."),
+    EMAIL_CERTIFICATION_INVALID(HttpStatus.BAD_REQUEST, "EMAIL_CERTIFICATION_INVALID", "이메일 인증 코드가 유효하지 않습니다."),
+
+
     ;
 
     private final String code;

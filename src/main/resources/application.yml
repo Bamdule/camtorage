@@ -12,8 +12,19 @@ spring:
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
     hibernate:
       ddl-auto: update
-
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ENC("0JCgrd639iwkK+/GgXZVMFZfmnPJZRusFI/DxhHq0Zo303BUpwnALg==")
+    password: ENC("YBVpp0UnXh3IHJ4DjkgTSONKyiQezTaF")
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
 
 jasypt:
   encryptor:
     bean: jasyptStringEncryptor
+
