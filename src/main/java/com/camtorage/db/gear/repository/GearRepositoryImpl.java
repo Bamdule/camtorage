@@ -42,6 +42,25 @@ public class GearRepositoryImpl implements GearRepositoryCustom {
     }
 
     @Override
+    public GearImageVO getGearImage(Integer gearId) {
+        JPAQueryFactory query = new JPAQueryFactory(em);
+
+        return query
+            .select(Projections.bean(
+                GearImageVO.class,
+                gearImage.image.id.as("imageId"),
+                gearImage.image.orgFilename,
+                gearImage.image.path.as("url")
+            ))
+            .from(gearImage)
+            .leftJoin(gearImage.image)
+            .where(gearImage.gear.id.eq(gearId))
+            .orderBy(gearImage.id.asc())
+            .limit(1)
+            .fetchOne();
+    }
+
+    @Override
     public List<GearResponse> getListGear(Integer userId) {
 
         JPAQueryFactory query = new JPAQueryFactory(em);

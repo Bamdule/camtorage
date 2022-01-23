@@ -42,4 +42,7 @@ public class GearResponse {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private List<GearImageVO> images = null;
 
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private String imageUrl;
+
 }

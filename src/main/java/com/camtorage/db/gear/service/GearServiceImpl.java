@@ -23,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class GearServiceImpl implements GearService {
@@ -140,7 +141,7 @@ public class GearServiceImpl implements GearService {
     @Override
     public GearResponse getGearByUserId(Integer userId, Integer gearId) {
         GearResponse gear = gearRepository.getGearById(userId, gearId);
-        List<GearImageVO> images = gearRepository.getListGearImage(gearId);
+        List<GearImageVO> images = getListGearImage(gearId);
 
         gear.setImages(images);
         return gear;
@@ -148,10 +149,23 @@ public class GearServiceImpl implements GearService {
 
     @Override
     public List<GearResponse> getListGear(Integer userId) {
+        AwsS3Property awsS3Property = serverProperty.getAwsS3Property();
 
-        List<GearResponse> gears = gearRepository.getListGear(userId);
-
-        return gears;
+        return gearRepository.getListGear(userId)
+            .stream()
+            .map(gear -> {
+                GearImageVO gearImage = gearRepository.getGearImage(gear.getId());
+                if (gearImage != null) {
+                    gear.setImageUrl(
+                        String.format("%s%s",
+                            awsS3Property.getDomain(),
+                            gearImage.getUrl()
+                        )
+                    );
+                }
+                return gear;
+            })
+            .collect(Collectors.toList());
     }
 
     public List<GearImageVO> getListGearImage(Integer gearId) {

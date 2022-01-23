@@ -9,6 +9,8 @@ public interface GearRepositoryCustom {
 
     public List<GearImageVO> getListGearImage(Integer gearId);
 
+    public GearImageVO getGearImage(Integer gearId);
+
     public List<GearResponse> getListGear(Integer userId);
 
     public long getCountGear(Integer userId);
