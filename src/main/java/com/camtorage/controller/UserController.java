@@ -12,6 +12,7 @@ import com.camtorage.entity.user.UserWrapperVO;
 import com.camtorage.entity.user.UserPayload;
 import com.camtorage.exception.CustomException;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,15 @@ public class UserController {
     private UserService userService;
     @Autowired
     private FriendService friendService;
+
+    // private Map<String,Object>
+
+    // @PostMapping("/send-auth-code")
+    // public ResponseEntity<Void> sendAuthCodeToEmail(String email) {
+    //     String code = RandomStringUtils.randomAlphanumeric(8);
+    //
+    //     return ResponseEntity.noContent().build();
+    // }
 
     @GetMapping("/existEmail")
     public ResponseEntity isExistEmail(String email) {

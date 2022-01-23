@@ -1,9 +1,10 @@
 package com.camtorage.db.gear.repository;
 
-import com.camtorage.entity.gear.Gear;
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.List;
+import com.camtorage.entity.gear.Gear;
 
 public interface GearRepository extends JpaRepository<Gear, Integer>, GearRepositoryCustom {
 

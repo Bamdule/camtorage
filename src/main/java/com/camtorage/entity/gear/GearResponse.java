@@ -39,4 +39,7 @@ public class GearResponse {
 
     private LocalDateTime updateDt;
 
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private List<GearImageVO> images = null;
+
 }

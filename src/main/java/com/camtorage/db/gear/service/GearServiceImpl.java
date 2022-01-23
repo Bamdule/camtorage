@@ -138,6 +138,15 @@ public class GearServiceImpl implements GearService {
     }
 
     @Override
+    public GearResponse getGearByUserId(Integer userId, Integer gearId) {
+        GearResponse gear = gearRepository.getGearById(userId, gearId);
+        List<GearImageVO> images = gearRepository.getListGearImage(gearId);
+
+        gear.setImages(images);
+        return gear;
+    }
+
+    @Override
     public List<GearResponse> getListGear(Integer userId) {
 
         List<GearResponse> gears = gearRepository.getListGear(userId);
@@ -145,8 +154,7 @@ public class GearServiceImpl implements GearService {
         return gears;
     }
 
-    @Override
-    public List<GearImageVO> getListGearImage(Integer userId, Integer gearId) {
+    public List<GearImageVO> getListGearImage(Integer gearId) {
         List<GearImageVO> gearImages = gearRepository.getListGearImage(gearId);
         AwsS3Property awsS3Property = serverProperty.getAwsS3Property();
 

@@ -6,9 +6,11 @@ import com.querydsl.core.types.ConstantImpl;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.EntityManager;
+
 import java.util.List;
 
 import static com.camtorage.entity.gear.QGear.gear;
@@ -25,18 +27,18 @@ public class GearRepositoryImpl implements GearRepositoryCustom {
         JPAQueryFactory query = new JPAQueryFactory(em);
 
         return query
-                .select(Projections.bean(
-                        GearImageVO.class,
-                        gearImage.image.id.as("imageId"),
-                        gearImage.image.orgFilename,
-                        gearImage.image.path.as("url")
-                ))
-                .from(gearImage)
-                .leftJoin(gearImage.image)
-                .where(gearImage.gear.id.eq(gearId))
-                .orderBy(gearImage.id.asc())
-                .fetch()
-                ;
+            .select(Projections.bean(
+                GearImageVO.class,
+                gearImage.image.id.as("imageId"),
+                gearImage.image.orgFilename,
+                gearImage.image.path.as("url")
+            ))
+            .from(gearImage)
+            .leftJoin(gearImage.image)
+            .where(gearImage.gear.id.eq(gearId))
+            .orderBy(gearImage.id.asc())
+            .fetch()
+            ;
     }
 
     @Override
@@ -57,11 +59,39 @@ public class GearRepositoryImpl implements GearRepositoryCustom {
                 gear.updateDt,
                 gearType.id.as("gearTypeId"),
                 gearType.name.as("gearTypeName")
-        ))
-                .from(gear)
-                .leftJoin(gearType).on(gearType.id.eq(gear.gearTypeId))
-                .where(gear.user.id.eq(userId))
-                .fetch();
+            ))
+            .from(gear)
+            .leftJoin(gearType).on(gearType.id.eq(gear.gearTypeId))
+            .where(gear.user.id.eq(userId))
+            .fetch();
+    }
+
+    public GearResponse getGearById(Integer userId, Integer gearId) {
+
+        JPAQueryFactory query = new JPAQueryFactory(em);
+
+        return query.select(Projections.bean(
+                GearResponse.class,
+                gear.id,
+                gear.capacity,
+                gear.color,
+                gear.company,
+                gear.name,
+                gear.price.coalesce(0).as("price"),
+                gear.buyDt,
+                gear.description,
+                gear.createDt,
+                gear.updateDt,
+                gearType.id.as("gearTypeId"),
+                gearType.name.as("gearTypeName")
+            ))
+            .from(gear)
+            .leftJoin(gearType).on(gearType.id.eq(gear.gearTypeId))
+            .where(
+                gear.user.id.eq(userId),
+                gear.id.eq(gearId)
+            )
+            .fetchOne();
     }
 
     @Override
@@ -69,8 +99,8 @@ public class GearRepositoryImpl implements GearRepositoryCustom {
         JPAQueryFactory query = new JPAQueryFactory(em);
 
         return query.select(gear)
-                .from(gear)
-                .where(gear.user.id.eq(userId))
-                .fetchCount();
+            .from(gear)
+            .where(gear.user.id.eq(userId))
+            .fetchCount();
     }
 }

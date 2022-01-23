@@ -13,4 +13,6 @@ public interface GearRepositoryCustom {
 
     public long getCountGear(Integer userId);
 
+    GearResponse getGearById(Integer userId, Integer gearId);
+
 }

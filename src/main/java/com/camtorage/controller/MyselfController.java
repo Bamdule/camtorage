@@ -137,15 +137,6 @@ public class MyselfController {
     }
 
     /*
-    내 장비 이미지 조회
-    */
-    @GetMapping(value = "/gear/images/{gearId}")
-    public ResponseEntity getListGearImage(@LoginUser UserPayload userPayload,
-        @PathVariable(value = "gearId") Integer gearId) {
-        return ResponseEntity.ok(gearService.getListGearImage(userPayload.getUserId(), gearId));
-    }
-
-    /*
     친구 요청
      */
     @PostMapping(value = "/friend/{friendId}", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
