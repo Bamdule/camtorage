@@ -1,17 +1,7 @@
 package com.camtorage.db.friend.service;
 
-import com.camtorage.db.friend.repository.FriendRepository;
-import com.camtorage.domain.user.repository.UserRepository;
-import com.camtorage.entity.friend.Friend;
-import com.camtorage.domain.user.dto.search.UserSearchCondition;
-import com.camtorage.entity.friend.FriendRelationship;
-import com.camtorage.entity.friend.FriendStatus;
-import com.camtorage.entity.friend.FriendVO;
-import com.camtorage.entity.user.User;
-import com.camtorage.exception.CustomException;
-import com.camtorage.exception.ExceptionCode;
-import com.camtorage.property.AwsS3Property;
-import com.camtorage.property.ServerProperty;
+import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -19,8 +9,19 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Optional;
+import com.camtorage.controller.dto.FriendRequestDto;
+import com.camtorage.db.friend.repository.FriendRepository;
+import com.camtorage.domain.user.dto.search.UserSearchCondition;
+import com.camtorage.domain.user.repository.UserRepository;
+import com.camtorage.entity.Pages;
+import com.camtorage.entity.friend.Friend;
+import com.camtorage.entity.friend.FriendRelationship;
+import com.camtorage.entity.friend.FriendStatus;
+import com.camtorage.entity.friend.FriendVO;
+import com.camtorage.entity.user.User;
+import com.camtorage.exception.CustomException;
+import com.camtorage.exception.ExceptionCode;
+import com.camtorage.property.ServerProperty;
 
 @Service
 public class FriendServiceImpl implements FriendService {
@@ -124,15 +125,21 @@ public class FriendServiceImpl implements FriendService {
     }
 
     @Override
-    public List<FriendVO> getListFollower(Integer userId) {
-        List<FriendVO> friendVOS = friendRepository.getListFollower(userId);
-        return friendVOS;
+    public Pages<FriendVO> findFollowersByUserId(
+        Integer userId,
+        FriendRequestDto.SearchRequest searchRequest,
+        Pageable pageable
+    ) {
+        return friendRepository.findFollowersByUserId(userId, searchRequest, pageable);
     }
 
     @Override
-    public List<FriendVO> getListFollowing(Integer userId) {
-        List<FriendVO> friendVOS = friendRepository.getListFollowing(userId);
-        return friendVOS;
+    public Pages<FriendVO> findFollowingsByUserId(
+        Integer userId,
+        FriendRequestDto.SearchRequest searchRequest,
+        Pageable pageable
+    ) {
+        return friendRepository.findFollowingsByUserId(userId, searchRequest, pageable);
     }
 
     @Override

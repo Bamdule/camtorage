@@ -1,28 +1,31 @@
 package com.camtorage.db.friend.repository;
 
+import java.util.Optional;
+
+import org.springframework.data.domain.Pageable;
+
+import com.camtorage.controller.dto.FriendRequestDto;
+import com.camtorage.entity.Pages;
 import com.camtorage.entity.friend.Friend;
 import com.camtorage.entity.friend.FriendStatus;
 import com.camtorage.entity.friend.FriendVO;
 
-import java.util.List;
-import java.util.Optional;
-
 public interface FriendRepositoryCustom {
     public Optional<Friend> findFriendByUserIdAndFriendId(Integer userId, Integer friendId);
 
-    public Optional<Friend> findFriendByUserIdAndFriendIdAndStatus(Integer userId, Integer friendId, FriendStatus status);
+    public Optional<Friend> findFriendByUserIdAndFriendIdAndStatus(Integer userId, Integer friendId,
+        FriendStatus status);
 
-    public List<FriendVO> getListFollower(Integer userId);
+    Pages<FriendVO> findFollowersByUserId(Integer userId, FriendRequestDto.SearchRequest searchRequest,
+        Pageable pageable);
 
-    public List<FriendVO> getListFollowing(Integer userId);
+    Pages<FriendVO> findFollowingsByUserId(Integer userId, FriendRequestDto.SearchRequest searchRequest,
+        Pageable pageable);
 
     public long getCountFollower(Integer userId);
 
     public long getCountFollowing(Integer userId);
 
-//    public List<FriendVO> searchFriend(UserSearch userSearch, Pageable pageable);
-
     void deleteAll(Integer id);
-
 
 }

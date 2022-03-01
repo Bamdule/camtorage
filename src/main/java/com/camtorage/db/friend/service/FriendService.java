@@ -1,12 +1,14 @@
 package com.camtorage.db.friend.service;
 
-import com.camtorage.domain.user.dto.search.UserSearchCondition;
-import com.camtorage.entity.friend.FriendRelationship;
-import com.camtorage.entity.friend.FriendVO;
+import java.util.List;
 
 import org.springframework.data.domain.Pageable;
 
-import java.util.List;
+import com.camtorage.controller.dto.FriendRequestDto;
+import com.camtorage.domain.user.dto.search.UserSearchCondition;
+import com.camtorage.entity.Pages;
+import com.camtorage.entity.friend.FriendRelationship;
+import com.camtorage.entity.friend.FriendVO;
 
 public interface FriendService {
 
@@ -16,9 +18,17 @@ public interface FriendService {
 
     public void deleteFriend(Integer userId, Integer friendId);
 
-    public List<FriendVO> getListFollower(Integer userId);
+    Pages<FriendVO> findFollowersByUserId(
+        Integer userId,
+        FriendRequestDto.SearchRequest searchRequest,
+        Pageable pageable
+    );
 
-    public List<FriendVO> getListFollowing(Integer userId);
+    Pages<FriendVO> findFollowingsByUserId(
+        Integer userId,
+        FriendRequestDto.SearchRequest searchRequest,
+        Pageable pageable
+    );
 
     public boolean isFriend(Integer userId, Integer friendId);
 

@@ -1,20 +1,26 @@
 package com.camtorage.db.friend.repository;
 
-import com.camtorage.entity.friend.*;
+import static com.camtorage.entity.friend.QFriend.*;
+
+import java.util.Optional;
+
+import javax.persistence.EntityManager;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.util.StringUtils;
+
+import com.camtorage.controller.dto.FriendRequestDto;
+import com.camtorage.entity.Pages;
+import com.camtorage.entity.friend.Friend;
+import com.camtorage.entity.friend.FriendStatus;
+import com.camtorage.entity.friend.FriendVO;
+import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.QueryResults;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.core.types.dsl.StringExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-
-import org.springframework.beans.factory.annotation.Autowired;
-
-import javax.persistence.EntityManager;
-
-import java.util.List;
-import java.util.Optional;
-
-import static com.camtorage.entity.friend.QFriend.friend1;
-import static com.camtorage.entity.user.QUser.*;
 
 public class FriendRepositoryImpl implements FriendRepositoryCustom {
 
@@ -58,7 +64,12 @@ public class FriendRepositoryImpl implements FriendRepositoryCustom {
     }
 
     @Override
-    public List<FriendVO> getListFollower(Integer userId) {
+    public Pages<FriendVO> findFollowersByUserId(
+        Integer userId,
+        FriendRequestDto.SearchRequest searchRequest,
+        Pageable pageable
+    ) {
+
         JPAQueryFactory query = new JPAQueryFactory(em);
 
         StringExpression userImageUrl = new CaseBuilder()
@@ -66,7 +77,17 @@ public class FriendRepositoryImpl implements FriendRepositoryCustom {
             .then(friend1.user.image.path.prepend(s3domain))
             .otherwise("");
 
-        return query.select(
+        BooleanBuilder whereBuilder = new BooleanBuilder();
+
+        if (StringUtils.hasText(searchRequest.getSearchText())) {
+
+            final String searchText = searchRequest.getSearchText().concat("%");
+
+            whereBuilder.and(friend1.user.name.like(searchText)
+                .or(friend1.user.email.like(searchText)));
+        }
+
+        QueryResults<FriendVO> fetchResults = query.select(
                 Projections.bean(
                     FriendVO.class,
                     friend1.id,
@@ -77,25 +98,49 @@ public class FriendRepositoryImpl implements FriendRepositoryCustom {
                     userImageUrl.as("profileUrl")
                 ))
             .from(friend1)
-            .join(friend1.user)
             .leftJoin(friend1.user.image)
             .where(
-                friend1.friend.id.eq(userId)
+                friend1.friend.id.eq(userId),
+                friend1.user.isDelete.isFalse(),
+                whereBuilder
             )
             .orderBy(friend1.status.desc())
-            .fetch()
-            ;
+            .offset(pageable.getOffset())
+            .limit(pageable.getPageSize())
+            .fetchResults();
+
+        return Pages.<FriendVO>builder()
+            .contents(fetchResults.getResults())
+            .page(pageable.getPageNumber())
+            .size(pageable.getPageSize())
+            .total(fetchResults.getTotal())
+            .build();
     }
 
     @Override
-    public List<FriendVO> getListFollowing(Integer userId) {
+    public Pages<FriendVO> findFollowingsByUserId(
+        Integer userId,
+        FriendRequestDto.SearchRequest searchRequest,
+        Pageable pageable
+    ) {
+        BooleanBuilder whereBuilder = new BooleanBuilder();
+
+        /**
+         * 검색어가 있을 경우 이름과 이메일을 조회한다
+         */
+        if (StringUtils.hasText(searchRequest.getSearchText())) {
+            final String searchText = searchRequest.getSearchText().concat("%");
+            whereBuilder.and(friend1.friend.name.like(searchText)
+                .or(friend1.friend.email.like(searchText)));
+        }
+
         JPAQueryFactory query = new JPAQueryFactory(em);
         StringExpression userImageUrl = new CaseBuilder()
             .when(friend1.friend.image.id.isNotNull())
             .then(friend1.friend.image.path.prepend(s3domain))
             .otherwise("");
 
-        return query.select(
+        QueryResults<FriendVO> fetchResults = query.select(
                 Projections.bean(
                     FriendVO.class,
                     friend1.id,
@@ -109,11 +154,19 @@ public class FriendRepositoryImpl implements FriendRepositoryCustom {
             .join(friend1.friend)
             .leftJoin(friend1.friend.image)
             .where(
-                friend1.user.id.eq(userId)
+                friend1.user.id.eq(userId),
+                friend1.friend.isDelete.isFalse(),
+                whereBuilder
             )
             .orderBy(friend1.status.desc())
-            .fetch()
-            ;
+            .fetchResults();
+
+        return Pages.<FriendVO>builder()
+            .contents(fetchResults.getResults())
+            .page(pageable.getPageNumber())
+            .size(pageable.getPageSize())
+            .total(fetchResults.getTotal())
+            .build();
     }
 
     @Override

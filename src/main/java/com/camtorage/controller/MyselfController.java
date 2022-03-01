@@ -1,29 +1,38 @@
 package com.camtorage.controller;
 
-import com.camtorage.aop.LoginUser;
-import com.camtorage.db.friend.service.FriendService;
-import com.camtorage.db.gear.service.GearService;
-import com.camtorage.db.user.service.UserService;
-import com.camtorage.entity.friend.FriendVO;
-import com.camtorage.entity.friend.FriendWrapper;
-import com.camtorage.entity.gear.GearImageWrap;
-import com.camtorage.entity.gear.GearRequest;
-import com.camtorage.entity.gear.GearResponse;
-import com.camtorage.entity.user.UserUpdateTO;
-import com.camtorage.entity.user.UserWrapperVO;
-import com.camtorage.entity.user.UserPayload;
+import java.util.List;
+
+import javax.validation.Valid;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.validation.Valid;
-
-import java.util.List;
+import com.camtorage.aop.LoginUser;
+import com.camtorage.controller.dto.FriendRequestDto;
+import com.camtorage.db.friend.service.FriendService;
+import com.camtorage.db.gear.service.GearService;
+import com.camtorage.db.user.service.UserService;
+import com.camtorage.entity.Pages;
+import com.camtorage.entity.friend.FriendVO;
+import com.camtorage.entity.gear.GearImageWrap;
+import com.camtorage.entity.gear.GearRequest;
+import com.camtorage.entity.gear.GearResponse;
+import com.camtorage.entity.user.UserPayload;
+import com.camtorage.entity.user.UserUpdateTO;
+import com.camtorage.entity.user.UserWrapperVO;
 
 @RestController
 @RequestMapping(value = "/api/myself")
@@ -187,16 +196,18 @@ public class MyselfController {
     내 팔로워 조회
      */
     @GetMapping(value = "/friend/follower")
-    public ResponseEntity getListFollower(
-        @LoginUser UserPayload userPayload) {
-        List<FriendVO> friends = friendService.getListFollower(userPayload.getUserId());
-
-        return ResponseEntity.ok(
-            FriendWrapper.builder()
-                .description("follower")
-                .friends(friends)
-                .build()
+    public ResponseEntity<Pages<FriendVO>> getListFollower(
+        @LoginUser UserPayload userPayload,
+        FriendRequestDto.SearchRequest searchRequest,
+        Pageable pageable
+    ) {
+        Pages<FriendVO> friends = friendService.findFollowersByUserId(
+            userPayload.getUserId(),
+            searchRequest,
+            pageable
         );
+
+        return ResponseEntity.ok(friends);
     }
 
     /*
@@ -204,15 +215,17 @@ public class MyselfController {
      */
     @GetMapping(value = "/friend/following")
     public ResponseEntity getListFollowing(
-        @LoginUser UserPayload userPayload) {
-        List<FriendVO> friends = friendService.getListFollowing(userPayload.getUserId());
-
-        return ResponseEntity.ok(
-            FriendWrapper.builder()
-                .description("following")
-                .friends(friends)
-                .build()
+        @LoginUser UserPayload userPayload,
+        FriendRequestDto.SearchRequest searchRequest,
+        Pageable pageable
+    ) {
+        Pages<FriendVO> friends = friendService.findFollowingsByUserId(
+            userPayload.getUserId(),
+            searchRequest,
+            pageable
         );
+
+        return ResponseEntity.ok(friends);
     }
 
     /*
