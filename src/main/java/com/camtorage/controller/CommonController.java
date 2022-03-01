@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.annotations.ApiOperation;
+
 @RestController
 @RequestMapping(value = "/api/common")
 public class CommonController {
@@ -15,6 +17,8 @@ public class CommonController {
     @Autowired
     private AppConfigService appConfigService;
 
+
+    @ApiOperation(value = "공통 설정 정보", notes = "공통 설정 정보")
     @GetMapping("/config")
     public ResponseEntity getConfig() {
 
