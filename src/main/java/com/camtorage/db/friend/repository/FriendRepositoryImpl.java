@@ -159,6 +159,8 @@ public class FriendRepositoryImpl implements FriendRepositoryCustom {
                 whereBuilder
             )
             .orderBy(friend1.status.desc())
+            .offset(pageable.getOffset())
+            .limit(pageable.getPageSize())
             .fetchResults();
 
         return Pages.<FriendVO>builder()
