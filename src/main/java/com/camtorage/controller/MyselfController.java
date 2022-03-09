@@ -22,8 +22,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.camtorage.aop.LoginUser;
 import com.camtorage.controller.dto.FriendRequestDto;
+import com.camtorage.controller.dto.UserRequestDto;
 import com.camtorage.db.friend.service.FriendService;
 import com.camtorage.db.gear.service.GearService;
+import com.camtorage.db.user.service.UserCommand;
 import com.camtorage.db.user.service.UserService;
 import com.camtorage.entity.Pages;
 import com.camtorage.entity.friend.FriendVO;
@@ -33,6 +35,10 @@ import com.camtorage.entity.gear.GearResponse;
 import com.camtorage.entity.user.UserPayload;
 import com.camtorage.entity.user.UserUpdateTO;
 import com.camtorage.entity.user.UserWrapperVO;
+import com.camtorage.exception.CustomException;
+import com.camtorage.exception.ExceptionCode;
+
+import io.swagger.annotations.ApiParam;
 
 @RestController
 @RequestMapping(value = "/api/myself")
@@ -62,7 +68,7 @@ public class MyselfController {
     /*
     내 정보 수정
      */
-    @PutMapping(consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    @PutMapping
     public ResponseEntity updateUser(@LoginUser UserPayload userPayload, UserUpdateTO userUpdateTO) {
 
         userUpdateTO.setId(userPayload.getUserId());
@@ -74,10 +80,29 @@ public class MyselfController {
     /*
     내 정보 수정
      */
-    @PutMapping(value = "/password", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    public ResponseEntity updateUserPassword(@LoginUser UserPayload userPayload, String password) {
+    @PutMapping(value = "/password")
+    public ResponseEntity updateUserPassword(
+        @ApiParam(hidden = true) @LoginUser UserPayload userPayload,
+        String password
+    ) {
 
         userService.updatePassword(userPayload.getUserId(), password);
+
+        return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping(value = "/password/certification")
+    public ResponseEntity certifyPassword(
+        @LoginUser UserPayload userPayload,
+        UserRequestDto.PasswordCertification passwordCertification
+    ) {
+        UserCommand.PasswordCertification command = passwordCertification.toCommand(userPayload.getUserId());
+
+        boolean isCertification = userService.certifyPassword(command);
+
+        if (!isCertification) {
+            throw new CustomException(ExceptionCode.PASSWORD_CERTIFICATION_INVALID);
+        }
 
         return ResponseEntity.noContent().build();
     }
@@ -242,6 +267,4 @@ public class MyselfController {
         return ResponseEntity.noContent().build();
     }
 
-    //    @GetMapping(value = "/friend/search")
-    //    public ResponseEntity searchFriend
 }

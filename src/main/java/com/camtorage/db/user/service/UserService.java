@@ -18,6 +18,8 @@ public interface UserService {
 
     public void updatePassword(Integer userId, String password);
 
+    boolean certifyPassword(UserCommand.PasswordCertification command);
+
     public String updateUserImage(Integer userId, MultipartFile file);
 
     public void deleteUserImage(Integer userId);

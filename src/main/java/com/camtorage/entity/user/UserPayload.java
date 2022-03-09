@@ -1,6 +1,8 @@
 package com.camtorage.entity.user;
 
 import com.camtorage.aop.LoginUser;
+
+import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
 import java.lang.annotation.Annotation;
@@ -11,6 +13,7 @@ import java.lang.annotation.Annotation;
 @AllArgsConstructor
 @Builder
 public class UserPayload implements LoginUser {
+    @ApiModelProperty(hidden = true)
     private Integer userId;
 
     @Override

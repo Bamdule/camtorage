@@ -32,6 +32,8 @@ public enum ExceptionCode {
     EMAIL_CERTIFICATION_EXPIRED(HttpStatus.BAD_REQUEST, "EMAIL_CERTIFICATION_EXPIRED", "이메일 인증 코드가 만료되었습니다."),
     EMAIL_CERTIFICATION_INVALID(HttpStatus.BAD_REQUEST, "EMAIL_CERTIFICATION_INVALID", "이메일 인증 코드가 유효하지 않습니다."),
 
+    PASSWORD_CERTIFICATION_INVALID(HttpStatus.BAD_REQUEST, "PASSWORD_CERTIFICATION_INVALID", "비밀번호가 일치하지 않습니다."),
+
 
     ;
 
