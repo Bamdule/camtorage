@@ -3,16 +3,14 @@ package com.camtorage.controller;
 import com.camtorage.aop.LoginUser;
 import com.camtorage.db.friend.service.FriendService;
 import com.camtorage.domain.user.dto.search.UserSearchCondition;
-import com.camtorage.db.user.service.UserService;
+import com.camtorage.db.user.UserService;
 import com.camtorage.domain.user.dto.search.UserSearchResponse;
 import com.camtorage.entity.user.UserRequest;
 import com.camtorage.domain.user.dto.UserResponse;
 import com.camtorage.entity.user.UserToken;
 import com.camtorage.entity.user.UserWrapperVO;
 import com.camtorage.entity.user.UserPayload;
-import com.camtorage.exception.CustomException;
 
-import org.apache.commons.lang3.RandomStringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +30,6 @@ public class UserController {
     private UserService userService;
     @Autowired
     private FriendService friendService;
-
 
     @GetMapping("/existEmail")
     public ResponseEntity isExistEmail(String email) {

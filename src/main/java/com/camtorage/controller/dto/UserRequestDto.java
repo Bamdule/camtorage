@@ -1,6 +1,6 @@
 package com.camtorage.controller.dto;
 
-import com.camtorage.db.user.service.UserCommand;
+import com.camtorage.db.user.UserCommand;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -12,8 +12,8 @@ public class UserRequestDto {
     public static class PasswordCertification {
         private String password;
 
-        public UserCommand.PasswordCertification toCommand(Integer userId) {
-            return UserCommand.PasswordCertification
+        public UserCommand.VerifyPasswordCertification toCommand(Integer userId) {
+            return UserCommand.VerifyPasswordCertification
                 .builder()
                 .userId(userId)
                 .password(this.password)

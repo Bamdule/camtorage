@@ -1,4 +1,4 @@
-package com.camtorage.db.user.service;
+package com.camtorage.db.user;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -8,10 +8,10 @@ public class UserCommand {
 
     @Setter
     @Getter
-    public static class PasswordCertification {
+    public static class VerifyPasswordCertification {
 
         @Builder
-        public PasswordCertification(Integer userId, String password) {
+        public VerifyPasswordCertification(Integer userId, String password) {
             this.userId = userId;
             this.password = password;
         }

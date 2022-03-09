@@ -25,8 +25,8 @@ import com.camtorage.controller.dto.FriendRequestDto;
 import com.camtorage.controller.dto.UserRequestDto;
 import com.camtorage.db.friend.service.FriendService;
 import com.camtorage.db.gear.service.GearService;
-import com.camtorage.db.user.service.UserCommand;
-import com.camtorage.db.user.service.UserService;
+import com.camtorage.db.user.UserCommand;
+import com.camtorage.db.user.UserService;
 import com.camtorage.entity.Pages;
 import com.camtorage.entity.friend.FriendVO;
 import com.camtorage.entity.gear.GearImageWrap;
@@ -96,7 +96,7 @@ public class MyselfController {
         @LoginUser UserPayload userPayload,
         UserRequestDto.PasswordCertification passwordCertification
     ) {
-        UserCommand.PasswordCertification command = passwordCertification.toCommand(userPayload.getUserId());
+        UserCommand.VerifyPasswordCertification command = passwordCertification.toCommand(userPayload.getUserId());
 
         boolean isCertification = userService.certifyPassword(command);
 

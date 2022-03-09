@@ -1,4 +1,4 @@
-package com.camtorage.db.user.service;
+package com.camtorage.db.user;
 
 import com.camtorage.domain.user.dto.UserResponse;
 import com.camtorage.domain.user.dto.search.UserSearchCondition;
@@ -18,7 +18,7 @@ public interface UserService {
 
     public void updatePassword(Integer userId, String password);
 
-    boolean certifyPassword(UserCommand.PasswordCertification command);
+    boolean certifyPassword(UserCommand.VerifyPasswordCertification command);
 
     public String updateUserImage(Integer userId, MultipartFile file);
 

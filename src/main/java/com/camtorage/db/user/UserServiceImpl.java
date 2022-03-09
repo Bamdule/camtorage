@@ -1,4 +1,4 @@
-package com.camtorage.db.user.service;
+package com.camtorage.db.user;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -14,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.camtorage.aws.S3Directory;
 import com.camtorage.common.util.PathUtil;
+import com.camtorage.db.certification.email.EmailCertificationService;
 import com.camtorage.db.file.service.FileService;
 import com.camtorage.db.friend.service.FriendService;
 import com.camtorage.db.gear.service.GearService;
@@ -57,6 +58,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserJWT userJWT;
+
+    @Autowired
+    private EmailCertificationService emailCertificationService;
 
     @Override
     public boolean isExistEmail(String email) {
@@ -118,7 +122,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean certifyPassword(UserCommand.PasswordCertification command) {
+    public boolean certifyPassword(UserCommand.VerifyPasswordCertification command) {
         User user = userRepository
             .findById(command.getUserId())
             .orElseThrow(() -> {

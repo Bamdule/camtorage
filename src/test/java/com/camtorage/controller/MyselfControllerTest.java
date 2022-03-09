@@ -2,7 +2,7 @@ package com.camtorage.controller;
 
 import com.camtorage.db.gear.service.GearService;
 import com.camtorage.db.geartype.repository.GearTypeRepository;
-import com.camtorage.db.user.service.UserService;
+import com.camtorage.db.user.UserService;
 import com.camtorage.entity.gear.GearRequest;
 import com.camtorage.entity.geartype.GearType;
 import com.camtorage.entity.user.UserRequest;

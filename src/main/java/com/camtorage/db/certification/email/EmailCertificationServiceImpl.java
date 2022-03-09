@@ -64,6 +64,9 @@ public class EmailCertificationServiceImpl implements EmailCertificationService 
 
         } else if (!emailCertification.isValidCode(email, code)) {
             throw new CustomException(ExceptionCode.EMAIL_CERTIFICATION_INVALID);
+        } else if (!emailCertification.equalValidCertificationType(command.getEmailCertificationType())) {
+            certificationManager.remove(email);
+            throw new CustomException(ExceptionCode.EMAIL_CERTIFICATION_NOT_FOUND);
         }
     }
 

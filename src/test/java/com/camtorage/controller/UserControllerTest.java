@@ -1,6 +1,6 @@
 package com.camtorage.controller;
 
-import com.camtorage.db.user.service.UserService;
+import com.camtorage.db.user.UserService;
 import com.camtorage.entity.user.UserRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;

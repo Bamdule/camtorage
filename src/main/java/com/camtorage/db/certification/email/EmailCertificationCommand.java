@@ -22,11 +22,13 @@ public class EmailCertificationCommand {
     public static class VerifyEmailCertification {
         private String email;
         private String code;
+        private EmailCertificationType emailCertificationType;
 
         @Builder
-        public VerifyEmailCertification(String email, String code) {
+        public VerifyEmailCertification(String email, String code, EmailCertificationType emailCertificationType) {
             this.email = email;
             this.code = code;
+            this.emailCertificationType = emailCertificationType;
         }
     }
 }
