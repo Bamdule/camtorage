@@ -1,6 +1,6 @@
 package com.camtorage.db.user;
 
-import com.camtorage.domain.user.dto.UserResponse;
+import com.camtorage.domain.user.dto.UserResponseDto;
 import com.camtorage.domain.user.dto.search.UserSearchCondition;
 import com.camtorage.domain.user.dto.search.UserSearchResponse;
 import com.camtorage.entity.user.*;
@@ -12,7 +12,7 @@ public interface UserService {
 
     public boolean isExistEmail(String email);
 
-    public UserResponse saveUser(UserRequest userRequest);
+    public UserInfo.Create createUser(UserCommand.Create createCommand);
 
     public void updateUser(UserUpdateTO userUpdateTO);
 
@@ -26,7 +26,7 @@ public interface UserService {
 
     public UserToken loginUser(String email, String password);
 
-    public UserResponse getUser(Integer id);
+    public UserResponseDto getUser(Integer id);
 
     public UserWrapperVO getUserInfo(Integer id);
 

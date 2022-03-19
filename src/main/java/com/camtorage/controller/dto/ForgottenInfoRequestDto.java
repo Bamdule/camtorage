@@ -2,7 +2,6 @@ package com.camtorage.controller.dto;
 
 import javax.validation.constraints.NotBlank;
 
-import com.camtorage.db.user.UserCommand;
 import com.camtorage.db.user.forgotteninfo.ForgottenInfoCommand;
 
 import lombok.Getter;

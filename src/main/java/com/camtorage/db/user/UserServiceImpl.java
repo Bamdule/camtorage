@@ -18,14 +18,15 @@ import com.camtorage.db.certification.email.EmailCertificationService;
 import com.camtorage.db.file.service.FileService;
 import com.camtorage.db.friend.service.FriendService;
 import com.camtorage.db.gear.service.GearService;
-import com.camtorage.domain.user.dto.UserResponse;
+import com.camtorage.domain.user.dto.UserResponseDto;
 import com.camtorage.domain.user.dto.search.UserSearchCondition;
 import com.camtorage.domain.user.dto.search.UserSearchResponse;
 import com.camtorage.domain.user.repository.UserRepository;
 import com.camtorage.entity.image.Image;
 import com.camtorage.entity.user.User;
+import com.camtorage.entity.user.UserCommand;
+import com.camtorage.entity.user.UserInfo;
 import com.camtorage.entity.user.UserPayload;
-import com.camtorage.entity.user.UserRequest;
 import com.camtorage.entity.user.UserToken;
 import com.camtorage.entity.user.UserUpdateTO;
 import com.camtorage.entity.user.UserWrapperVO;
@@ -68,27 +69,31 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserResponse saveUser(UserRequest userRequest) {
+    public UserInfo.Create createUser(UserCommand.Create createCommand) {
+
+        /**
+         * 이메일 중복을 체크한다.
+         */
         userRepository
-            .findUserByEmail(userRequest.getEmail())
+            .findUserByEmail(createCommand.getEmail())
             .ifPresent((user) -> {
                 throw new CustomException(ExceptionCode.ALREADY_JOINED);
             });
 
-        User user = User.builder()
-            .email(userRequest.getEmail())
-            .password(passwordEncoder.encode(userRequest.getPassword()))
+        User initUser = User.builder()
+            .email(createCommand.getEmail())
+            .name(createCommand.getName())
+            .password(passwordEncoder.encode(createCommand.getPassword()))
             .joinDt(LocalDateTime.now())
             .isPublic(true)
             .isDelete(false)
             .build();
 
-        userRepository.save(user);
+        User createdUser = userRepository.save(initUser);
 
-        userRequest.setId(user.getId());
-        userRequest.setIsPublic(user.getIsPublic());
+        UserInfo.Create userInfo = UserInfo.Create.of(createdUser);
 
-        return modelMapper.map(userRequest, UserResponse.class);
+        return userInfo;
     }
 
     @Transactional
@@ -203,9 +208,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserResponse getUser(Integer id) {
+    public UserResponseDto getUser(Integer id) {
 
-        UserResponse user = userRepository
+        UserResponseDto user = userRepository
             .getUserById(id)
             .orElseThrow(() -> new CustomException(ExceptionCode.USER_NOT_EXISTED));
 

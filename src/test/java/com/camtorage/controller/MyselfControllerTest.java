@@ -1,12 +1,13 @@
 package com.camtorage.controller;
 
+import com.camtorage.controller.dto.UserRequestDto;
 import com.camtorage.db.gear.service.GearService;
 import com.camtorage.db.geartype.repository.GearTypeRepository;
 import com.camtorage.db.user.UserService;
 import com.camtorage.entity.gear.GearRequest;
 import com.camtorage.entity.geartype.GearType;
-import com.camtorage.entity.user.UserRequest;
 import com.camtorage.entity.user.UserToken;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -24,7 +25,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -46,7 +46,6 @@ class MyselfControllerTest {
 
     private UserToken userToken;
 
-
     @BeforeEach
     public void init() {
 
@@ -56,17 +55,17 @@ class MyselfControllerTest {
         gearType.setSeq(1);
         gearTypeRepository.save(gearType);
 
-        String email = "test3333@gmail.com";
-        String password = "1234";
-        UserRequest user = UserRequest.builder()
-                .email(email)
-                .name("tester")
-                .password(password)
-                .build();
-        userService.saveUser(user);
+        //given
+        final String email = "test3333@gmail.com";
+        final String password = "1234";
+        UserRequestDto.CreateRequest userRequest = new UserRequestDto.CreateRequest();
+        userRequest.setEmail(email);
+        userRequest.setName("tester");
+        userRequest.setPassword(password);
+
+        userService.createUser(userRequest.toCommand());
 
         this.userToken = userService.loginUser(email, password);
-
     }
 
     @Test
@@ -84,9 +83,9 @@ class MyselfControllerTest {
                 .param("color", gearRequest.getColor())
                 .param("gearTypeId", String.valueOf(gearRequest.getGearTypeId()))
                 .param("price", String.valueOf(gearRequest.getPrice())))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("name").value(gearRequest.getName()))
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("name").value(gearRequest.getName()))
         ;
     }
 
@@ -98,21 +97,21 @@ class MyselfControllerTest {
         mockMvc.perform(get("/api/myself/gear")
                 .contentType(MediaType.MULTIPART_FORM_DATA)
                 .header("authorization", userToken.getToken()))
-                .andDo(print())
-                .andExpect(status().isOk())
+            .andDo(print())
+            .andExpect(status().isOk())
         ;
     }
 
     public GearRequest createGearRequest(Integer index) {
         return GearRequest.builder()
-                .name("gearTest" + index)
-                .price(1000)
-                .company("company" + index)
-                .gearTypeId(1)
-                .color("blue")
-                .capacity("4")
-                .buyDt("2021-09-22")
-                .build();
+            .name("gearTest" + index)
+            .price(1000)
+            .company("company" + index)
+            .gearTypeId(1)
+            .color("blue")
+            .capacity("4")
+            .buyDt("2021-09-22")
+            .build();
     }
 
 }

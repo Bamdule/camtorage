@@ -1,8 +1,7 @@
 package com.camtorage.entity.user;
 
-import com.camtorage.domain.user.dto.UserResponse;
+import com.camtorage.domain.user.dto.UserResponseDto;
 import com.camtorage.entity.friend.FriendRelationship;
-import com.camtorage.entity.friend.FriendStatus;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import lombok.*;
@@ -15,7 +14,7 @@ import lombok.*;
 @ToString
 public class UserWrapperVO {
 
-    private UserResponse user;
+    private UserResponseDto user;
 
     private long followerCnt = 0;
     private long followingCnt = 0;

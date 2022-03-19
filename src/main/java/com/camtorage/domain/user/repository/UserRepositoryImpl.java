@@ -1,14 +1,8 @@
 package com.camtorage.domain.user.repository;
 
-import com.camtorage.domain.user.dto.UserResponse;
+import com.camtorage.domain.user.dto.UserResponseDto;
 import com.camtorage.domain.user.dto.search.UserSearchCondition;
 import com.camtorage.domain.user.dto.search.UserSearchResponse;
-import com.camtorage.entity.friend.Friend;
-import com.camtorage.entity.friend.QFriend;
-import com.camtorage.entity.gear.QGear;
-import com.camtorage.entity.gear.QGearImage;
-import com.camtorage.property.ServerProperty;
-import com.querydsl.core.QueryResults;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.core.types.dsl.StringExpression;
@@ -17,15 +11,11 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 
-import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
 
 import java.util.List;
 import java.util.Optional;
 
-import static com.camtorage.entity.friend.QFriend.*;
-import static com.camtorage.entity.gear.QGear.*;
-import static com.camtorage.entity.gear.QGearImage.*;
 import static com.camtorage.entity.user.QUser.user;
 
 public class UserRepositoryImpl implements UserRepositoryCustom {
@@ -39,13 +29,13 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
      유저 조회
      */
     @Override
-    public Optional<UserResponse> getUserById(Integer id) {
+    public Optional<UserResponseDto> getUserById(Integer id) {
 
         JPAQueryFactory query = new JPAQueryFactory(em);
 
         return Optional.ofNullable(query
             .select(Projections.bean(
-                UserResponse.class,
+                UserResponseDto.class,
                 user.id,
                 user.name,
                 user.email,
@@ -92,9 +82,9 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
             .then(user.image.path.prepend(s3domain))
             .otherwise("");
 
-        List<UserResponse> userResponses = query
+        List<UserResponseDto> userResponsDtos = query
             .select(Projections.bean(
-                UserResponse.class,
+                UserResponseDto.class,
                 user.id,
                 user.name,
                 user.email,
@@ -115,7 +105,7 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
 
         return UserSearchResponse
             .builder()
-            .users(userResponses)
+            .users(userResponsDtos)
             .page(pageable.getPageNumber())
             .size(pageable.getPageSize())
             .total(totalCount)

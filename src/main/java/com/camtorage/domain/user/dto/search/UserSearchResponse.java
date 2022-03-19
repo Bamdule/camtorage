@@ -1,6 +1,6 @@
 package com.camtorage.domain.user.dto.search;
 
-import com.camtorage.domain.user.dto.UserResponse;
+import com.camtorage.domain.user.dto.UserResponseDto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,7 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class UserSearchResponse {
-    private List<UserResponse> users = new ArrayList<>();
+    private List<UserResponseDto> users = new ArrayList<>();
 
     private long total = 0;
     private int page = 0;

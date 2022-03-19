@@ -1,8 +1,9 @@
 package com.camtorage.controller;
 
+import com.camtorage.controller.dto.UserRequestDto;
 import com.camtorage.db.user.UserService;
-import com.camtorage.entity.user.UserRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -12,6 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
+
 import javax.transaction.Transactional;
 
 import java.util.Map;
@@ -34,56 +36,52 @@ class UserControllerTest {
     @Autowired
     private UserService userService;
 
-
     @Autowired
     protected ObjectMapper objectMapper;
 
     @BeforeEach
     public void init() {
         String email = "test0@gmail.com";
-        String passwrd = "1234";
+        String password = "1234";
+        String name = "tester";
 
-        UserRequest user = UserRequest.builder()
-                .email(email)
-                .password(passwrd)
-                .name("tester")
-                .phone("01033334444")
-                .build();
+        UserRequestDto.CreateRequest userRequest = new UserRequestDto.CreateRequest();
+        userRequest.setEmail(email);
+        userRequest.setName(name);
+        userRequest.setPassword(password);
 
-        userService.saveUser(user);
+        userService.createUser(userRequest.toCommand());
     }
 
     @Test
-    public void joinUserSuccessTest() throws Exception {
-        UserRequest user = UserRequest.builder()
-                .email("test1@gmail.com")
-                .password("1234")
-                .build();
+    public void 회원가입이_성공적으로_수행된다() throws Exception {
+        UserRequestDto.CreateRequest userRequest = new UserRequestDto.CreateRequest();
+        userRequest.setName("tester");
+        userRequest.setEmail("test1@gmail.com");
+        userRequest.setPassword("1234");
 
         this.mockMvc.perform(post("/api/user")
-                .param("email", user.getEmail())
-                .param("password", user.getPassword())
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-                .accept(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isOk())
+            .param("email", userRequest.getEmail())
+            .param("password", userRequest.getPassword())
+            .param("name", userRequest.getName()))
+            .andDo(print())
+            .andExpect(status().isCreated())
         ;
     }
 
     @Test
     @DisplayName("회원가입 시 잘못된 파라메터를 넘길 경우")
     public void joinUserInvalidParameterTest() throws Exception {
-        UserRequest user = UserRequest.builder()
-                .email("test@gmail.com")
-                .password("1234")
-                .build();
+        UserRequestDto.CreateRequest userRequest = new UserRequestDto.CreateRequest();
+        userRequest.setName("tester");
+        userRequest.setEmail("test1@gmail.com");
+        userRequest.setPassword("1234");
 
         this.mockMvc.perform(post("/api/user")
                 .param("email", "")
-                .param("password", user.getPassword())
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE))
-                .andDo(print())
-                .andExpect(status().isBadRequest())
+                .param("password", userRequest.getPassword()))
+            .andDo(print())
+            .andExpect(status().isBadRequest())
         ;
     }
 
@@ -97,9 +95,9 @@ class UserControllerTest {
                 .param("email", email)
                 .param("password", passwrd)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("token").isNotEmpty())
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("token").isNotEmpty())
         ;
     }
 
@@ -113,18 +111,18 @@ class UserControllerTest {
                 .param("email", email)
                 .param("password", password)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("token").isNotEmpty())
-                .andReturn().getResponse().getContentAsString();
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("token").isNotEmpty())
+            .andReturn().getResponse().getContentAsString();
         ;
         Map<String, String> map = objectMapper.readValue(responseBody, Map.class);
 
         this.mockMvc.perform(get("/api/myself")
                 .header("authorization", map.get("token"))
-        )
-                .andDo(print())
-                .andExpect(status().isOk())
+            )
+            .andDo(print())
+            .andExpect(status().isOk())
         ;
     }
 }

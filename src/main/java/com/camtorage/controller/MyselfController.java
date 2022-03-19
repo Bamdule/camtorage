@@ -25,7 +25,7 @@ import com.camtorage.controller.dto.FriendRequestDto;
 import com.camtorage.controller.dto.UserRequestDto;
 import com.camtorage.db.friend.service.FriendService;
 import com.camtorage.db.gear.service.GearService;
-import com.camtorage.db.user.UserCommand;
+import com.camtorage.entity.user.UserCommand;
 import com.camtorage.db.user.UserService;
 import com.camtorage.entity.Pages;
 import com.camtorage.entity.friend.FriendVO;
@@ -94,9 +94,9 @@ public class MyselfController {
     @PostMapping(value = "/password/certification")
     public ResponseEntity certifyPassword(
         @LoginUser UserPayload userPayload,
-        UserRequestDto.PasswordCertification passwordCertification
+        UserRequestDto.CreatePasswordCertification createPasswordCertification
     ) {
-        UserCommand.VerifyPasswordCertification command = passwordCertification.toCommand(userPayload.getUserId());
+        UserCommand.VerifyPasswordCertification command = createPasswordCertification.toCommand(userPayload.getUserId());
 
         boolean isCertification = userService.certifyPassword(command);
 
