@@ -110,7 +110,7 @@ public class MyselfController {
     /*
     내 프로필 사진 등록
      */
-    @PostMapping(value = "/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/image")
     public ResponseEntity updateUserImage(@LoginUser UserPayload userPayload, MultipartFile userImage) {
         String url = userService.updateUserImage(userPayload.getUserId(), userImage);
         return ResponseEntity.ok(url);
@@ -128,7 +128,7 @@ public class MyselfController {
     /*
     내 장비 등록
      */
-    @PostMapping(value = "/gear", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/gear")
     public ResponseEntity saveGear(@LoginUser UserPayload userPayload, @Valid GearRequest gear,
         List<MultipartFile> gearImages) {
 
@@ -140,7 +140,7 @@ public class MyselfController {
     /*
     내 장비 수정
      */
-    @PutMapping(value = "/gear/{gearId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PutMapping(value = "/gear/{gearId}")
     public ResponseEntity updateGear(
         @LoginUser UserPayload userPayload,
         @PathVariable(value = "gearId") Integer gearId,
@@ -173,7 +173,7 @@ public class MyselfController {
     /*
     친구 요청
      */
-    @PostMapping(value = "/friend/{friendId}", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    @PostMapping(value = "/friend/{friendId}")
     public ResponseEntity requestFriend(
         @LoginUser UserPayload userPayload,
         @PathVariable Integer friendId
@@ -189,7 +189,7 @@ public class MyselfController {
     /*
     친구 요청 승인
      */
-    @PutMapping(value = "/friend/{friendId}", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    @PutMapping(value = "/friend/{friendId}")
     public ResponseEntity acceptFriend(
         @LoginUser UserPayload userPayload,
         @PathVariable Integer friendId

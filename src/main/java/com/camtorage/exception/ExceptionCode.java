@@ -34,8 +34,7 @@ public enum ExceptionCode {
 
     PASSWORD_CERTIFICATION_INVALID(HttpStatus.BAD_REQUEST, "PASSWORD_CERTIFICATION_INVALID", "비밀번호가 일치하지 않습니다."),
 
-
-    ;
+    DEVICE_NOT_FOUND(HttpStatus.NOT_FOUND, "DEVICE_NOT_FOUND", "존재하지 않은 디바이스입니다.");
 
     private final String code;
     private final String message;
