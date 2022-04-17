@@ -1,8 +1,11 @@
 spring:
   datasource:
+    hikari:
+      maximumPoolSize: 5
     url: ENC("@db.url@")
     username: ENC("@db.username@")
     password: ENC("@db.password@")
+
   jpa:
     open-in-view: false
     properties:
@@ -11,7 +14,7 @@ spring:
         show_sql: true
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
   mail:
     host: smtp.gmail.com
     port: 587
@@ -27,4 +30,8 @@ spring:
 jasypt:
   encryptor:
     bean: jasyptStringEncryptor
+
+logback:
+  dir: "/usr/local/tomcat8/logs"
+  level: "DEBUG"
 
